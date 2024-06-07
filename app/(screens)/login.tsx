@@ -1,11 +1,14 @@
 import 'react-native-reanimated';
 
 import { FC } from 'react';
-import { View } from 'react-native';
-import { Button, Text, TextInput, useTheme } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 import { ThemedView } from '@/components/ThemedView';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HomePageStackParamList } from '@/components/navigation/HomePageNavigation';
+import Header from '@/components/Header';
+import FormInput from '@/components/FormInput';
+import NavigationLink from '@/components/navigation/NavigationLink';
 
 
 type LoginScreenProps = {
@@ -13,38 +16,17 @@ type LoginScreenProps = {
 };
 
 const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
-    const { colors } = useTheme()
 
     return (
         <ThemedView>
-            <Text variant='displayMedium' style={{ textAlign: 'center', marginTop: 100, color: colors.primary, fontWeight: 700 }}>
-                ProFinder
-            </Text>
-            <View style={{ display: 'flex', gap: 15, margin: 20, marginTop: 40 }}>
-                <Text variant='headlineSmall' style={{ fontWeight: 700, marginBottom: 10 }}>
+            <Header />
+            <View style={styles.container}>
+                <Text variant='headlineSmall' style={styles.containerHeader}>
                     Login
                 </Text>
-                <Text variant='bodyLarge'>
-                    Email
-                </Text>
-                <TextInput
-                    mode='outlined'
-                    placeholder='User Email'
-                    style={{ backgroundColor: '#1E1E2D' }}
-                />
-                <Text variant='bodyLarge'>
-                    Password
-                </Text>
-                <TextInput
-                    mode='outlined'
-                    placeholder='User Password'
-                    style={{ backgroundColor: '#1E1E2D' }}
-                />
-                <Text
-                    onPress={() => navigation.navigate('Signup')}
-                >
-                    Don't have an account? Sign Up
-                </Text>
+                <FormInput label='Email' placeholder='User Email' />
+                <FormInput label='Password' placeholder='User Password' />
+                <NavigationLink onPress={() => navigation.navigate('Signup' as any)} text="Don't have an account?" linkText="Sign Up" />
                 <Button
                     style={{ marginTop: 15 }}
                     icon='login'
@@ -56,5 +38,11 @@ const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
         </ThemedView>
     );
 }
+
+const styles = StyleSheet.create({
+    container: { display: 'flex', gap: 15, margin: 20, marginTop: 40 },
+    containerHeader: { fontWeight: 700, marginBottom: 10 }
+});
+
 
 export default LoginScreen;
