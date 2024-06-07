@@ -1,11 +1,9 @@
-import 'react-native-reanimated';
+import "react-native-reanimated";
 
-import { theme } from '@/constants/theme';
-import { PaperProvider } from 'react-native-paper';
-import DrawerNavigation from '@/components/navigation/AppNavigation';
-import HomePageNavigation from '@/components/navigation/HomePageNavigation';
-
-
+import { theme } from "@/constants/theme";
+import { PaperProvider } from "react-native-paper";
+import DrawerNavigation from "@/components/navigation/AppNavigation";
+import HomePageNavigation from "@/components/navigation/HomePageNavigation";
 
 export default function RootLayout() {
   return (
