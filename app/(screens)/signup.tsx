@@ -1,20 +1,18 @@
-import 'react-native-reanimated';
+import { ThemedView } from "@/components/ThemedView";
+import { HomePageStackParamList } from "@/components/navigation/HomePageNavigation";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { FC } from "react";
+import { View } from "react-native";
+import { Button, Text, TextInput, useTheme } from "react-native-paper";
 
-import { FC } from 'react';
-import { View } from 'react-native';
-import { Button, Text, TextInput, useTheme } from 'react-native-paper';
-import { ThemedView } from '@/components/ThemedView';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { HomePageStackParamList } from '@/components/navigation/HomePageNavigation';
-
-
-type LoginScreenProps = {
+type SignUpScreenProps = {
     navigation: StackNavigationProp<HomePageStackParamList>;
 };
 
-const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
-    const { colors } = useTheme()
 
+const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
+
+    const { colors } = useTheme()
     return (
         <ThemedView>
             <Text variant='displayMedium' style={{ textAlign: 'center', marginTop: 100, color: colors.primary, fontWeight: 700 }}>
@@ -22,8 +20,16 @@ const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
             </Text>
             <View style={{ display: 'flex', gap: 15, margin: 20, marginTop: 40 }}>
                 <Text variant='headlineSmall' style={{ fontWeight: 700, marginBottom: 10 }}>
-                    Login
+                    Sign Up
                 </Text>
+                <Text variant='bodyLarge'>
+                    Username
+                </Text>
+                <TextInput
+                    mode='outlined'
+                    placeholder='Your Unique Username'
+                    style={{ backgroundColor: '#1E1E2D' }}
+                />
                 <Text variant='bodyLarge'>
                     Email
                 </Text>
@@ -40,21 +46,29 @@ const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
                     placeholder='User Password'
                     style={{ backgroundColor: '#1E1E2D' }}
                 />
+                <Text variant='bodyLarge'>
+                    Re-Password
+                </Text>
+                <TextInput
+                    mode='outlined'
+                    placeholder='Revalidate Password'
+                    style={{ backgroundColor: '#1E1E2D' }}
+                />
                 <Text
-                    onPress={() => navigation.navigate('Signup')}
+                    onPress={() => navigation.navigate('Login')}
                 >
-                    Don't have an account? Sign Up
+                    Already have an account? Login
                 </Text>
                 <Button
                     style={{ marginTop: 15 }}
-                    icon='login'
+                    icon="send"
                     mode="contained"
                 >
-                    Login
+                    SingUp
                 </Button>
             </View>
         </ThemedView>
-    );
+    )
 }
 
-export default LoginScreen;
+export default SignUpScreen;
