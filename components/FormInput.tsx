@@ -5,7 +5,7 @@ import { useFormContext, Controller } from "react-hook-form";
 
 interface FormInputProps {
   label: string;
-  name: string;
+  formKey: string;
   placeholder: string;
   secureTextEntry?: boolean;
   rules?: object;
@@ -13,7 +13,7 @@ interface FormInputProps {
 
 const FormInput: FC<FormInputProps> = ({
   label,
-  name,
+  formKey,
   placeholder,
   secureTextEntry = false,
   rules = {},
@@ -33,6 +33,7 @@ const FormInput: FC<FormInputProps> = ({
           <>
             <TextInput
               mode="outlined"
+              
               secureTextEntry={secureTextEntry}
               value={value}
               placeholder={placeholder}
@@ -49,7 +50,7 @@ const FormInput: FC<FormInputProps> = ({
             )}
           </>
         )}
-        name={name}
+        name={formKey}
         rules={rules}
       />
     </View>

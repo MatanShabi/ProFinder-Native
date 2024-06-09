@@ -34,13 +34,13 @@ const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
           </Text>
           <FormInput
             label="Email"
-            name="email"
+            formKey="email"
             placeholder="Enter your username"
             rules={{ required: "Username is required" }}
           />
           <FormInput
             label="Password"
-            name="password"
+            formKey="password"
             placeholder="Enter your password"
             secureTextEntry={true}
             rules={{ required: "Password is required" }}

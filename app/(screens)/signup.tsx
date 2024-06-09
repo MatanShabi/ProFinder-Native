@@ -8,7 +8,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { StackNavigationProp } from "@react-navigation/stack";
 import NavigationLink from "@/components/navigation/NavigationLink";
 import { HomePageStackParamList } from "@/components/navigation/HomePageNavigation";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
 type SignUpScreenProps = {
   navigation: StackNavigationProp<HomePageStackParamList>;
@@ -25,46 +25,48 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
   const { username, email, password } = methods.getValues();
 
   return (
-    <ThemedView>
-      <Header />
-      <View style={styles.container}>
-        <Text variant="headlineSmall" style={styles.containerHeader}>
-          Sign Up
-        </Text>
-        <FormInput
-          label="Username"
-          name={"username"}
-          placeholder="Your Unique Username"
-          rules={{ required: "Username is required" }}
-        />
-        <FormInput
-          label="Email"
-          name={"email"}
-          placeholder="User Email"
-          rules={{ required: "Email is required" }}
-        />
-        <FormInput
-          label="Password"
-          name={"password"}
-          placeholder="User Password"
-          rules={{ required: "Password is required" }}
-        />
-        <FormInput
-          label="Re-Password"
-          name={"re-password"}
-          placeholder="Revalidate Password"
-          rules={{ required: "Re-password is required" }}
-        />
-        <NavigationLink
-          onPress={() => navigation.navigate("Login" as any)}
-          text="Already have an account?"
-          linkText="Login"
-        />
-        <Button style={{ marginTop: 15 }} icon="send" mode="contained">
-          SingUp
-        </Button>
-      </View>
-    </ThemedView>
+    <FormProvider {...methods}>
+      <ThemedView>
+        <Header />
+        <View style={styles.container}>
+          <Text variant="headlineSmall" style={styles.containerHeader}>
+            Sign Up
+          </Text>
+          <FormInput
+            label="Username"
+            formKey={"username"}
+            placeholder="Your Unique Username"
+            rules={{ required: "Username is required" }}
+          />
+          <FormInput
+            label="Email"
+            formKey={"email"}
+            placeholder="User Email"
+            rules={{ required: "Email is required" }}
+          />
+          <FormInput
+            label="Password"
+            formKey={"password"}
+            placeholder="User Password"
+            rules={{ required: "Password is required" }}
+          />
+          <FormInput
+            label="Re-Password"
+            formKey={"re-password"}
+            placeholder="Revalidate Password"
+            rules={{ required: "Re-password is required" }}
+          />
+          <NavigationLink
+            onPress={() => navigation.navigate("Login" as any)}
+            text="Already have an account?"
+            linkText="Login"
+          />
+          <Button style={{ marginTop: 15 }} icon="send" mode="contained">
+            SingUp
+          </Button>
+        </View>
+      </ThemedView>
+    </FormProvider>
   );
 };
 
