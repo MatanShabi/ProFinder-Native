@@ -1,34 +1,56 @@
 import React, { FC } from "react";
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  TextInputChangeEventData,
-  View,
-} from "react-native";
-import { Text, TextInput } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Text, TextInput, useTheme } from "react-native-paper";
+import { useFormContext, Controller } from "react-hook-form";
 
 interface FormInputProps {
   label: string;
-  value: string;
+  name: string;
   placeholder: string;
-  onChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
+  secureTextEntry?: boolean;
+  rules?: object;
 }
 
 const FormInput: FC<FormInputProps> = ({
   label,
+  name,
   placeholder,
-  value,
-  onChange,
+  secureTextEntry = false,
+  rules = {},
 }) => {
+  const { colors } = useTheme();
+  const { control } = useFormContext();
+
   return (
     <View>
       <Text variant="bodyLarge">{label}</Text>
-      <TextInput
-        mode="outlined"
-        value={value}
-        placeholder={placeholder}
-        style={styles.input}
-        onChange={onChange}
+      <Controller
+        control={control}
+        render={({
+          field: { onChange, onBlur, value },
+          fieldState: { error },
+        }) => (
+          <>
+            <TextInput
+              mode="outlined"
+              secureTextEntry={secureTextEntry}
+              value={value}
+              placeholder={placeholder}
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              error={!!error}
+            />
+            {error && (
+              <Text variant="bodySmall" style={{ color: colors.error }}>
+                {" "}
+                {error?.message}
+              </Text>
+            )}
+          </>
+        )}
+        name={name}
+        rules={rules}
       />
     </View>
   );

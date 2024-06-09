@@ -1,8 +1,8 @@
 import * as React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import LoginScreen from "@/app/(screens)/login";
 import { useTheme } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
+import PostsScreen from "@/app/(screens)/posts";
 
 const Drawer = createDrawerNavigator();
 
@@ -12,7 +12,7 @@ const DrawerNavigation = () => {
   return (
     <NavigationContainer independent>
       <Drawer.Navigator
-        initialRouteName="(screens)/login"
+        initialRouteName="(screens)/posts"
         screenOptions={{
           drawerStyle: {
             backgroundColor: theme.colors.background,
@@ -26,10 +26,10 @@ const DrawerNavigation = () => {
         }}
       >
         <Drawer.Screen
-          name="(screens)/login"
-          component={LoginScreen}
+          name="(screens)/posts"
+          component={PostsScreen}
           options={{
-            title: "Login",
+            title: "posts",
             headerTitle: "ProFinder",
             // TODO: Create an component with a logo for this (use header:)
           }}

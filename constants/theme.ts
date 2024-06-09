@@ -17,5 +17,6 @@ export const theme = {
     onSurfaceVariant: "#FFA000",
     inverseSurface: "#232533",
     inverseOnSurface: "#FFFFFF",
+    error: "#e61515",
   },
 };
