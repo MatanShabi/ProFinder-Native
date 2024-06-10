@@ -64,12 +64,6 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
             placeholder="User Password"
             rules={{ required: "Password is required" }}
           />
-          <FormInput
-            label="Re-Password"
-            formKey={"re-password"}
-            placeholder="Revalidate Password"
-            rules={{ required: "Re-password is required" }}
-          />
           <NavigationLink
             onPress={() => navigation.navigate("Login" as any)}
             text="Already have an account?"
