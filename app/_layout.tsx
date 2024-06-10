@@ -9,7 +9,7 @@ import HomePageNavigation from "@/components/navigation/HomePageNavigation";
 import useUser from "@/hooks/useUser";
 
 export default function RootLayout() {
-  const user = useUser();
+  const { user } = useUser();
   return (
     <PaperProvider theme={theme}>
       {user ? <DrawerNavigation /> : <HomePageNavigation />}

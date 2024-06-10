@@ -33,7 +33,6 @@ const FormInput: FC<FormInputProps> = ({
           <>
             <TextInput
               mode="outlined"
-              
               secureTextEntry={secureTextEntry}
               value={value}
               placeholder={placeholder}

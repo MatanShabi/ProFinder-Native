@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import Header from "@/components/Header";
 import FormInput from "@/components/FormInput";
@@ -9,20 +9,26 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import NavigationLink from "@/components/navigation/NavigationLink";
 import { HomePageStackParamList } from "@/components/navigation/HomePageNavigation";
 import { FormProvider, useForm } from "react-hook-form";
+import useSignUp from "@/hooks/useSignUp";
 
 type SignUpScreenProps = {
   navigation: StackNavigationProp<HomePageStackParamList>;
 };
 
 type SingUpForm = {
-  username: string;
   email: string;
   password: string;
 };
 
 const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
   const methods = useForm<SingUpForm>();
-  const { username, email, password } = methods.getValues();
+  const { createUser, isLoading, isError, userCradentials } = useSignUp();
+
+  useEffect(() => {
+    if (!isLoading && userCradentials?.user) {
+      navigation.navigate("Login" as any)
+    }
+  }, [userCradentials, isLoading])
 
   return (
     <FormProvider {...methods}>
@@ -32,12 +38,6 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
           <Text variant="headlineSmall" style={styles.containerHeader}>
             Sign Up
           </Text>
-          <FormInput
-            label="Username"
-            formKey={"username"}
-            placeholder="Your Unique Username"
-            rules={{ required: "Username is required" }}
-          />
           <FormInput
             label="Email"
             formKey={"email"}
@@ -61,7 +61,14 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
             text="Already have an account?"
             linkText="Login"
           />
-          <Button style={{ marginTop: 15 }} icon="send" mode="contained">
+          <Button
+            style={{ marginTop: 15 }}
+            icon="send"
+            mode="contained"
+            onPress={methods.handleSubmit(async (data: SingUpForm) =>
+              createUser(data.email, data.password)
+            )}
+          >
             SingUp
           </Button>
         </View>
