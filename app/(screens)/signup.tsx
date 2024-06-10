@@ -16,19 +16,21 @@ type SignUpScreenProps = {
 };
 
 type SingUpForm = {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 };
 
 const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
   const methods = useForm<SingUpForm>();
-  const { createUser, isLoading, isError, userCradentials } = useSignUp();
+  const { createUser, isLoading, isError, userCredentials } = useSignUp();
 
   useEffect(() => {
-    if (!isLoading && userCradentials?.user) {
+    if (!isLoading && userCredentials?.user) {
       navigation.navigate("Login" as any)
     }
-  }, [userCradentials, isLoading])
+  }, [userCredentials, isLoading])
 
   return (
     <FormProvider {...methods}>
@@ -38,6 +40,18 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
           <Text variant="headlineSmall" style={styles.containerHeader}>
             Sign Up
           </Text>
+          <FormInput
+            label="First Name"
+            formKey="firstName"
+            placeholder="First Name"
+            rules={{ required: "First name is required" }}
+          />
+          <FormInput
+            label="Last Name"
+            formKey="lastName"
+            placeholder="Last Name"
+            rules={{ required: "Last name is required" }}
+          />
           <FormInput
             label="Email"
             formKey={"email"}
@@ -66,7 +80,7 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
             icon="send"
             mode="contained"
             onPress={methods.handleSubmit(async (data: SingUpForm) =>
-              createUser(data.email, data.password)
+              createUser(data.email, data.password, data.firstName, data.lastName)
             )}
           >
             SingUp

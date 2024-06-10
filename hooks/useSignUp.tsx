@@ -1,33 +1,48 @@
 import { useState } from "react";
 import {
+  User,
   UserCredential,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [userCradentials, SetUserCrendntials] = useState<
+  const [userCredentials, setUserCredentials] = useState<
     UserCredential | undefined
   >(undefined);
 
-  const createUser = async (email: string, password: string) => {
+  const updateUserProfile = async (user: User, firstName: string, lastName: string) => {
+    if (user) {
+      await updateProfile(user, {
+        displayName: `${firstName} ${lastName}`,
+      });
+    }
+  };
+
+  const createUser = async (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => {
+    setIsLoading(true);
+    setIsError(false);
     try {
-      setIsLoading(true);
       const user = await createUserWithEmailAndPassword(auth, email, password);
-      SetUserCrendntials(user);
-      setIsLoading(false);
-      setIsError(false);
-    } catch (e) {
+      await updateUserProfile(user.user, firstName, lastName);
+      setUserCredentials(user)
+    } catch (error) {
       setIsError(true);
+      console.error("Error creating user: ", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { createUser, userCradentials, isLoading, isError };
+  return { createUser, updateUserProfile, userCredentials, isLoading, isError };
 };
 
 export default useSignUp;
