@@ -4,7 +4,7 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/config/firebase";
 import { theme } from "@/constants/theme";
 import { PaperProvider } from "react-native-paper";
-import DrawerNavigation from "@/components/navigation/AppNavigation";
+import DrawerNavigation from "@/components/navigation/DrawerNavigation";
 import HomePageNavigation from "@/components/navigation/HomePageNavigation";
 import useUser from "@/hooks/useUser";
 
