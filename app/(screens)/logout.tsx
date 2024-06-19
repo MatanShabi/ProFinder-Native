@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { HomePageStackParamList } from "@/components/navigation/HomePageNavigation"; // Adjust path as needed
+import { HomePageStackParamList } from "@/components/navigation/HomePageNavigation";
 import { getAuth, signOut } from "firebase/auth";
 import { ThemedView } from "@/components/ThemedView";
 
