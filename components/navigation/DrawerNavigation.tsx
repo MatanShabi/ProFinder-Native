@@ -3,7 +3,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useTheme } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import PostsScreen from "@/app/(screens)/posts";
-import LogoutScreen from "@/app/(screens)/logout"; // Adjust path as needed
+import LogoutScreen from "@/app/(screens)/logout";
+import ProfileScreen from "@/app/(screens)/profile";
 
 const Drawer = createDrawerNavigator();
 
@@ -31,7 +32,14 @@ const DrawerNavigation = () => {
           component={PostsScreen}
           options={{
             title: "Posts",
-            headerTitle: "ProFinder",
+            headerTitle: "Posts",
+          }}
+        />
+        <Drawer.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            title: "Profile",
           }}
         />
         <Drawer.Screen
@@ -41,6 +49,7 @@ const DrawerNavigation = () => {
             title: "Logout",
           }}
         />
+
       </Drawer.Navigator>
     </NavigationContainer>
   );
