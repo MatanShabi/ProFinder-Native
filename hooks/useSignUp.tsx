@@ -7,8 +7,7 @@ import {
 } from "firebase/auth";
 import { auth, storage } from "../config/firebase";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-
-import axios from "axios"; 
+import { handlePictureAPI } from '../scripts/handlePictureAPI'; 
 
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -38,22 +37,15 @@ const useSignUp = () => {
     setIsLoading(true);
     setIsError(false);
     try {
-      let apiUrl = 'https://ui-avatars.com/api/'
-      apiUrl += `?name=${encodeURIComponent(firstName + " " + lastName)}&size=200&color=fff&rounded=true`
-      const randomBackgroundColor = generateRandomColor();
-      apiUrl += `&background=${encodeURIComponent(randomBackgroundColor)}`;
-      const response = await axios.get(apiUrl, { responseType: 'blob' });
-      const pictureBlob = await response.data;
-
+      const pictureBlob = await handlePictureAPI(firstName, lastName);
+      
       const storageRef = ref(storage, `profilePictures/${email}.png`);
-
-      await uploadBytes(storageRef, pictureBlob)
+      await uploadBytes(storageRef, pictureBlob);
       
       const downloadURL = await getDownloadURL(storageRef);
-
       const user = await createUserWithEmailAndPassword(auth, email, password);
       await updateUserProfile(user.user, firstName, lastName, downloadURL);
-      setUserCredentials(user)
+      setUserCredentials(user);
 
     } catch (error) {
       setIsError(true);
@@ -65,10 +57,5 @@ const useSignUp = () => {
 
   return { createUser, updateUserProfile, userCredentials, isLoading, isError };
 };
-
-function generateRandomColor(): string {
-  const random = Math.floor(Math.random() * 16777215).toString(16);
-  return '#' + '0'.repeat(6 - random.length) + random;
-}
 
 export default useSignUp;
