@@ -62,6 +62,7 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
             label="Password"
             formKey={"password"}
             placeholder="User Password"
+            secureTextEntry={true}
             rules={{ required: "Password is required" }}
           />
           <NavigationLink
