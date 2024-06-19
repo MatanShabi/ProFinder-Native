@@ -9,11 +9,10 @@ const ProfileScreen: FC = () => {
     const { user } = useUser();
     
     const { updateUserProfile } = useSignUp();
-    const [displayName, setDisplayName] = useState<string | undefined>(undefined); // Initialize with undefined
-    const [modalName, setModalName] = useState<string | undefined>(undefined); // Initialize with undefined
+    const [displayName, setDisplayName] = useState<string | undefined>(undefined);
+    const [modalName, setModalName] = useState<string | undefined>(undefined); 
     const [modalVisible, setModalVisible] = useState(false);
 
-    // useEffect to set displayName and modalName when user data is available
     useEffect(() => {
         if (user && user.displayName) {
             setDisplayName(user.displayName);
@@ -26,7 +25,7 @@ const ProfileScreen: FC = () => {
     };
 
     const handleChange = (text: string) => {
-        setModalName(text); // Update modalName on text change
+        setModalName(text);
     };
 
     const handleSave = () => {
@@ -42,7 +41,7 @@ const ProfileScreen: FC = () => {
     };
 
     const handleCancel = () => {
-        setModalName(displayName); // Reset modalName to displayName on cancel
+        setModalName(displayName);
         setModalVisible(false);
     };
 
@@ -51,7 +50,7 @@ const ProfileScreen: FC = () => {
     };
 
     if (!displayName) {
-        return null; // Handle case where user data is still loading or not available
+        return null;
     }
 
     return (
