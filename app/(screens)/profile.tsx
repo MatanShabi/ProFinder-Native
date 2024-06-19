@@ -1,39 +1,102 @@
 import { ThemedView } from "@/components/ThemedView";
 import useUser from "@/hooks/useUser";
-import { FC } from "react";
-import { View, StyleSheet } from "react-native";
-import { Avatar, Text, IconButton } from "react-native-paper";
+import { FC, useState, useEffect } from "react";
+import { View, StyleSheet, Modal, TextInput, Alert } from "react-native";
+import { Avatar, Text, IconButton, Button } from "react-native-paper";
+import useSignUp from "@/hooks/useSignUp";
 
 const ProfileScreen: FC = () => {
     const { user } = useUser();
-    console.log('User:', user);
+    
+    const { updateUserProfile } = useSignUp();
+    const [displayName, setDisplayName] = useState<string | undefined>(undefined); // Initialize with undefined
+    const [modalName, setModalName] = useState<string | undefined>(undefined); // Initialize with undefined
+    const [modalVisible, setModalVisible] = useState(false);
+
+    // useEffect to set displayName and modalName when user data is available
+    useEffect(() => {
+        if (user && user.displayName) {
+            setDisplayName(user.displayName);
+            setModalName(user.displayName);
+        }
+    }, [user]);
 
     const handleEdit = () => {
-        // Implement the edit functionality here
-        // It can involve navigation to another screen or opening a modal
+        setModalVisible(true);
     };
+
+    const handleChange = (text: string) => {
+        setModalName(text); // Update modalName on text change
+    };
+
+    const handleSave = () => {
+        if (modalName && modalName.trim().length > 0) {
+            if (user) {
+                setDisplayName(modalName); 
+                updateUserProfile(user, modalName, '', user.photoURL || 'https://via.placeholder.com/120');
+            }
+            setModalVisible(false);
+        } else {
+            Alert.alert('Invalid Name', 'Display name cannot be empty.');
+        }
+    };
+
+    const handleCancel = () => {
+        setModalName(displayName); // Reset modalName to displayName on cancel
+        setModalVisible(false);
+    };
+
+    const handleChangeProfilePicture = () => {
+        console.log('Change profile picture');
+    };
+
+    if (!displayName) {
+        return null; // Handle case where user data is still loading or not available
+    }
 
     return (
         <ThemedView>
             <View style={styles.container}>
-            <Avatar.Image
-                size={120}
-                source={{ uri: user?.photoURL || 'https://via.placeholder.com/120' }}
-                style={styles.avatar}
-            />
-            <View style={styles.infoContainer}>
-                <Text variant="titleLarge" style={styles.name}>
-                    {user?.displayName || 'User Name'}
-                </Text>
-                <IconButton
-                    icon="pencil"
-                    size={24}
-                    onPress={handleEdit}
-                    style={styles.editButton}
+                <Avatar.Image
+                    size={120}
+                    source={{ uri: user?.photoURL || 'https://via.placeholder.com/120' }}
+                    style={styles.avatar}
                 />
+                <View style={styles.infoContainer}>
+                    <Text variant="titleLarge" style={styles.name}>
+                        {displayName || 'User Name'}
+                    </Text>
+                    <IconButton
+                        icon="pencil"
+                        size={24}
+                        onPress={handleEdit}
+                        style={styles.editButton}
+                    />
+                </View>
             </View>
-        </View>
-        </ThemedView >
+
+            <Modal
+                visible={modalVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text>Edit Display Name</Text>
+                        <TextInput
+                            value={modalName || ''}
+                            onChangeText={handleChange}
+                            style={styles.input}
+                        />
+                        <View style={styles.modalButtons}>
+                            <Button mode="outlined" onPress={handleSave}>Save</Button>
+                            <Button mode="outlined" onPress={handleCancel}>Cancel</Button>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+        </ThemedView>
     );
 };
 
@@ -55,6 +118,30 @@ const styles = StyleSheet.create({
     },
     editButton: {
         marginLeft: 8,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        elevation: 5,
+        minWidth: 300,
+    },
+    input: {
+        borderBottomWidth: 1,
+        borderColor: '#ccc',
+        marginBottom: 10,
+        paddingVertical: 5,
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 10,
     },
 });
 
