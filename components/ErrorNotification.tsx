@@ -15,7 +15,7 @@ const ErrorNotification: React.FC<ErrorSnackbarProps> = ({ visible, onDismiss, e
         <Snackbar
             visible={visible}
             onDismiss={onDismiss}
-            duration={2000}
+            duration={3000}
             style={[styles.snackbar, { backgroundColor: theme.colors.error }]}
             action={{
                 label: 'Dismiss',
