@@ -1,128 +1,27 @@
-import { ThemedView } from "@/components/ThemedView";
-import useUser from "@/hooks/useUser";
-import { FC, useState, useEffect } from "react";
-import { TouchableOpacity, View, StyleSheet, Modal, TextInput, Alert } from "react-native";
+import { FC, useState } from "react";
+import { View, StyleSheet, Modal, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Avatar, Text, IconButton, Button } from "react-native-paper";
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from "../../config/firebase";
-import useSignUp from "@/hooks/useSignUp";
-import * as ImagePicker from 'expo-image-picker';
+import { ThemedView } from "@/components/ThemedView";
+import useProfile from "@/hooks/useProfile";
+import ErrorNotification from "@/components/ErrorNotification";
 
 const ProfileScreen: FC = () => {
-    const { user } = useUser();
-
-    const { updateUserProfile } = useSignUp();
-    const [displayName, setDisplayName] = useState<string | undefined>(undefined);
-    const [modalName, setModalName] = useState<string | undefined>(undefined);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [imageUrl, setImageUrl] = useState<string | null>(user?.photoURL || `https://via.placeholder.com/120`);
-
-
-    useEffect(() => {
-        if (user && user.displayName) {
-            setDisplayName(user.displayName);
-            setModalName(user.displayName);
-            setImageUrl(user.photoURL || `https://via.placeholder.com/120`);
-        }
-    }, [user]);
-
-    const handleEdit = () => {
-        setModalVisible(true);
-        console.log('user', user   )
-    };
-
-    const handleChange = (text: string) => {
-        setModalName(text);
-    };
-
-    const uriToBlob = (uri: string) => {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest()
-            xhr.onload = function () {
-                resolve(xhr.response)
-            }
-            xhr.onerror = function () {
-                reject(new Error('uriToBlob failed'))
-            }
-            xhr.responseType = 'blob'
-            xhr.open('GET', uri, true)
-
-            xhr.send(null)
-        })
-    }
-
-    const generateRandomName = () => {
-        const characters = '0123456789abcdefghijklmnop';
-        let result = '';
-        for (let i = 0; i < 40; i++) {
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        return result + '.png';
-    };
-
-
-    const handleSave = () => {
-        if (modalName && modalName.trim().length > 0) {
-            if (user) {
-                setDisplayName(modalName);
-                updateUserProfile(user, modalName, '', user.photoURL || 'https://via.placeholder.com/120');
-            }
-            setModalVisible(false);
-        } else {
-            Alert.alert('Invalid Name', 'Display name cannot be empty.');
-        }
-    };
-
-    const handleCancel = () => {
-        setModalName(displayName);
-        setModalVisible(false);
-    };
-
-
-
-    const handleChangeProfilePicture = async () => {
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) {
-            Alert.alert('Permission Denied', 'Permission to access photo library is required.');
-            return;
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 1,
-        });
-
-        if (result.canceled) {
-            return;
-        }
-
-        if (!user || !result.assets || !result.assets[0].uri) {
-            Alert.alert('Error', 'User is not logged in or image selection failed.');
-            return;
-        }
-
-        try {
-            const assetUri = result.assets[0].uri;
-            const blob = await uriToBlob(assetUri)
-            const fileName = generateRandomName();
-            const storageRef = ref(storage, `profilePictures/${fileName}`);
-
-            await uploadBytes(storageRef, blob as Blob | Uint8Array | ArrayBuffer);
-            const downloadURL = await getDownloadURL(storageRef);
-            setImageUrl(downloadURL);
-            if (user.displayName && user.displayName.trim().length > 0) {
-                updateUserProfile(user, user.displayName, '', downloadURL || 'https://via.placeholder.com/120');
-            }
-        }
-        catch (error) {
-            console.error(error);
-            Alert.alert('Upload failed', 'Could not upload the image. Please try again.');
-        }
-    }
-    if (!displayName) {
-        return null;
-    }
+    const {
+        displayName,
+        modalName,
+        imageUrl,
+        modalVisible,
+        isLoading,
+        isError,
+        errorMessage,
+        setModalName,
+        setIsError,
+        handleEdit,
+        handleSave,
+        handleCancel,
+        handleChangeProfilePicture,
+        setModalVisible,
+    } = useProfile();
 
     return (
         <ThemedView>
@@ -136,7 +35,7 @@ const ProfileScreen: FC = () => {
                 </TouchableOpacity>
                 <View style={styles.infoContainer}>
                     <Text variant="titleLarge" style={styles.name}>
-                        {displayName || 'User Name'}
+                        {displayName}
                     </Text>
                     <IconButton
                         icon="pencil"
@@ -157,17 +56,25 @@ const ProfileScreen: FC = () => {
                     <View style={styles.modalContent}>
                         <Text>Edit Display Name</Text>
                         <TextInput
-                            value={modalName || ''}
-                            onChangeText={handleChange}
+                            value={modalName ?? ''}
+                            onChangeText={setModalName}
                             style={styles.input}
                         />
                         <View style={styles.modalButtons}>
-                            <Button mode="outlined" onPress={handleSave}>Save</Button>
-                            <Button mode="outlined" onPress={handleCancel}>Cancel</Button>
+                            <Button mode="outlined" onPress={handleSave} disabled={isLoading}>
+                                Save
+                            </Button>
+                            <Button mode="outlined" onPress={handleCancel} disabled={isLoading}>
+                                Cancel
+                            </Button>
                         </View>
                     </View>
                 </View>
             </Modal>
+
+            {isError &&
+                <ErrorNotification visible={isError} errorMessage={errorMessage}
+                    onDismiss={() => { setIsError(false) }} />}
         </ThemedView>
     );
 };
@@ -213,6 +120,10 @@ const styles = StyleSheet.create({
     modalButtons: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
+        marginTop: 10,
+    },
+    errorText: {
+        color: 'red',
         marginTop: 10,
     },
 });
