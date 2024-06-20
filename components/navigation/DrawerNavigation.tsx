@@ -5,6 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import PostsScreen from "@/app/(screens)/posts";
 import LogoutScreen from "@/app/(screens)/logout";
 import ProfileScreen from "@/app/(screens)/profile";
+import AboutUsScreen from "@/app/(screens)/aboutus";
+import PrivacyPolicyScreen from "@/app/(screens)/privacypolicy";
 
 const Drawer = createDrawerNavigator();
 
@@ -33,6 +35,20 @@ const DrawerNavigation = () => {
           options={{
             title: "Posts",
             headerTitle: "Posts",
+          }}
+        />
+        <Drawer.Screen
+          name="PrivacyPolicy"
+          component={PrivacyPolicyScreen}
+          options={{
+            title: "Privacy Policy",
+          }}
+        />
+        <Drawer.Screen
+          name="AboutUs"
+          component={AboutUsScreen}
+          options={{
+            title: "About Us",
           }}
         />
         <Drawer.Screen
