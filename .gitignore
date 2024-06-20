@@ -9,6 +9,8 @@ node_modules/
 **/package-lock.json
 **/.env
 
+config/env.js
+
 # BUCK
 .buckconfig
 .buckd/
