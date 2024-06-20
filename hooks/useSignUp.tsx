@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { auth, storage } from "../config/firebase";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { handlePictureAPI } from '../scripts/handlePictureAPI'; 
+import { handlePictureAPI } from '../scripts/handlePictureAPI';
 
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -16,16 +16,25 @@ const useSignUp = () => {
     UserCredential | undefined
   >(undefined);
 
-  const updateUserProfile = async (user: User, 
-     firstName: string,
-     lastName: string,
-     photoUrl: string ) => {
+  const updateUserProfile = async (user: User,
+    firstName: string,
+    lastName: string,
+    photoUrl: string) => {
     if (user) {
       await updateProfile(user, {
         displayName: `${firstName} ${lastName}`,
         photoURL: photoUrl
       });
     }
+  };
+
+  const generateRandomName = () => {
+    const characters = '0123456789abcdefghijklmnop';
+    let result = '';
+    for (let i = 0; i < 40; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result + '.png';
   };
 
   const createUser = async (
@@ -38,13 +47,14 @@ const useSignUp = () => {
     setIsError(false);
     try {
       const pictureBlob = await handlePictureAPI(firstName, lastName);
-      
-      const storageRef = ref(storage, `profilePictures/${email}.png`);
+      const fileName = generateRandomName();
+      const storageRef = ref(storage, `profilePictures/${fileName}`);
       await uploadBytes(storageRef, pictureBlob);
-      
+
       const downloadURL = await getDownloadURL(storageRef);
       const user = await createUserWithEmailAndPassword(auth, email, password);
       await updateUserProfile(user.user, firstName, lastName, downloadURL);
+      console.log('downloadURL', downloadURL);
       setUserCredentials(user);
 
     } catch (error) {
