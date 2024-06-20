@@ -22,7 +22,11 @@ const ProfileScreen: FC = () => {
         handleChangeProfilePicture,
         setModalVisible,
     } = useProfile();
-
+      {/* <Avatar.Image
+        size={120}
+        source={{ uri: user?.photoURL || 'https://via.placeholder.com/120' }}
+        style={styles.avatar}
+      /> */}
     return (
         <ThemedView>
             <View style={styles.container}>
