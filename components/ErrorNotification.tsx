@@ -2,33 +2,28 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Snackbar, useTheme } from 'react-native-paper';
 
-interface ErrorNotificationProps {
-    error: string;
-    onClose: () => void;
+interface ErrorSnackbarProps {
+  visible: boolean;
+  onDismiss: () => void;
+  errorMessage: string;
 }
 
-const ErrorNotification: React.FC<ErrorNotificationProps> = ({ error, onClose }) => {
+const ErrorNotification: React.FC<ErrorSnackbarProps> = ({ visible, onDismiss, errorMessage }) => {
     const theme = useTheme();
-    const [visible, setVisible] = useState<boolean>(!!error);
-
-    const onDismissSnackBar = () => {
-        setVisible(false);
-        onClose();
-    };
 
     return (
         <Snackbar
             visible={visible}
-            onDismiss={onDismissSnackBar}
-            duration={Snackbar.DURATION_LONG}
+            onDismiss={onDismiss}
+            duration={2000}
             style={[styles.snackbar, { backgroundColor: theme.colors.error }]}
             action={{
                 label: 'Dismiss',
-                onPress: onDismissSnackBar,
-                color: '#fff',
+                onPress: onDismiss,
+                color: '#000',
             }}
         >
-            <Text style={styles.errorText}>{error}</Text>
+            <Text style={styles.errorText}>{errorMessage}</Text>
         </Snackbar>
     );
 };
@@ -41,7 +36,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     errorText: {
-        color: '#fff',
+        color: '#000',
     },
 });
 
