@@ -51,7 +51,7 @@ const DrawerNavigation = () => {
             <PaperDrawer.Section>
               <PaperDrawer.Item
                 label="Posts"
-                icon="file"
+                icon="forum"
                 onPress={() => props.navigation.navigate("Posts")}
               />
               <PaperDrawer.Item
