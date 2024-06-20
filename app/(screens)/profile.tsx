@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { View, StyleSheet, Modal, TextInput, TouchableOpacity, Alert } from "react-native";
+import { FC } from "react";
+import { View, StyleSheet, Modal, TextInput, TouchableOpacity } from "react-native";
 import { Avatar, Text, IconButton, Button } from "react-native-paper";
 import { ThemedView } from "@/components/ThemedView";
 import useProfile from "@/hooks/useProfile";
@@ -18,29 +18,38 @@ const ProfileScreen: FC = () => {
         setIsError,
         handleEdit,
         handleSave,
+        handleDelete,
         handleCancel,
         handleChangeProfilePicture,
         setModalVisible,
     } = useProfile();
 
-    
     return (
         <ThemedView>
             <View style={styles.container}>
-                <TouchableOpacity onPress={handleChangeProfilePicture}>
-                    <Avatar.Image
-                        size={120}
-                        source={{ uri: imageUrl || 'https://via.placeholder.com/120' }}
-                        style={styles.avatar}
+                <View style={styles.avatarContainer}>
+                    <TouchableOpacity onPress={handleChangeProfilePicture}>
+                        <Avatar.Image
+                            size={120}
+                            source={{ uri: imageUrl || 'https://via.placeholder.com/120' }}
+                            style={styles.avatar}
+                        />
+                    </TouchableOpacity>
+                    <IconButton
+                        icon="delete"
+                        size={28}
+                        onPress={handleDelete}
+                        iconColor="red"
+                        style={styles.deleteButton}
                     />
-                </TouchableOpacity>
+                </View>
                 <View style={styles.infoContainer}>
                     <Text variant="titleLarge" style={styles.name}>
                         {displayName}
                     </Text>
                     <IconButton
                         icon="pencil"
-                        size={24}
+                        size={28}
                         onPress={handleEdit}
                         style={styles.editButton}
                     />
@@ -73,9 +82,13 @@ const ProfileScreen: FC = () => {
                 </View>
             </Modal>
 
-            {isError &&
-                <ErrorNotification visible={isError} errorMessage={errorMessage}
-                    onDismiss={() => { setIsError(false) }} />}
+            {isError && (
+                <ErrorNotification
+                    visible={isError}
+                    errorMessage={errorMessage}
+                    onDismiss={() => { setIsError(false); }}
+                />
+            )}
         </ThemedView>
     );
 };
@@ -86,7 +99,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
     },
+    avatarContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     avatar: {
+        marginBottom: 16,
+    },
+    deleteButton: {
+        marginLeft: 8,
         marginBottom: 16,
     },
     infoContainer: {

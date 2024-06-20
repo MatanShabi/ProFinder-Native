@@ -3,7 +3,7 @@ import {
   User,
   UserCredential,
   createUserWithEmailAndPassword,
-  updateProfile,
+  updateProfile
 } from "firebase/auth";
 import { auth, storage } from "../config/firebase";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';

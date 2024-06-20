@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { Alert } from "react-native";
 import { storage } from '@/config/firebase';
+import { deleteUser } from "firebase/auth";
 import * as ImagePicker from 'expo-image-picker';
 import useUser from '@/hooks/useUser';
 import useSignUp from '@/hooks/useSignUp';
@@ -51,6 +53,32 @@ const useProfile = () => {
     const handleCancel = () => {
         setModalName(displayName);
         setModalVisible(false);
+    };
+
+    const handleDelete = () => {
+        Alert.alert(
+            "Confirm Deletion",
+            "Are you sure you want to delete the account?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        setIsLoading(true);
+                        if (user) {
+                            await deleteUser(user);
+                            console.log('User account deleted successfully.');
+                        }
+                        setIsLoading(false);
+                    },
+                },
+            ],
+            { cancelable: true }
+        );
     };
 
     const handleChangeProfilePicture = async () => {
@@ -128,6 +156,7 @@ const useProfile = () => {
         setIsError,
         handleEdit,
         handleSave,
+        handleDelete,
         handleCancel,
         handleChangeProfilePicture,
         setModalVisible,
