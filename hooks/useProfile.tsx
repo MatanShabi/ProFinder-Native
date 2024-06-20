@@ -69,11 +69,18 @@ const useProfile = () => {
                     style: "destructive",
                     onPress: async () => {
                         setIsLoading(true);
-                        if (user) {
-                            await deleteUser(user);
-                            console.log('User account deleted successfully.');
+                        setIsError(false);
+                        try {
+                            if (user) {
+                                await deleteUser(user);
+                                console.log('User account deleted successfully.');
+                            }
+                        } catch (error) {
+                            setIsError(true);
+                            console.error("Error deleting user: ", error);
+                        } finally {
+                            setIsLoading(false);
                         }
-                        setIsLoading(false);
                     },
                 },
             ],
