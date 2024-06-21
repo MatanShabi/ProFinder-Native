@@ -1,21 +1,20 @@
-import { FC, useEffect } from "react";
-
+import React, { FC, useEffect } from "react";
+import { StyleSheet, View, Modal } from "react-native";
+import { Button, Text, ActivityIndicator } from "react-native-paper";
+import { FormProvider, useForm } from "react-hook-form";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ThemedView } from "@/components/ThemedView";
 import Header from "@/components/Header";
 import FormInput from "@/components/FormInput";
-import { StyleSheet, View } from "react-native";
-import { Button, Text } from "react-native-paper";
-import { ThemedView } from "@/components/ThemedView";
-import { StackNavigationProp } from "@react-navigation/stack";
 import NavigationLink from "@/components/navigation/NavigationLink";
 import { HomePageStackParamList } from "@/components/navigation/HomePageNavigation";
-import { FormProvider, useForm } from "react-hook-form";
 import useSignUp from "@/hooks/useSignUp";
 
 type SignUpScreenProps = {
   navigation: StackNavigationProp<HomePageStackParamList>;
 };
 
-type SingUpForm = {
+type SignUpForm = {
   firstName: string;
   lastName: string;
   email: string;
@@ -23,14 +22,14 @@ type SingUpForm = {
 };
 
 const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
-  const methods = useForm<SingUpForm>();
-  const { createUser, isLoading, isError, userCredentials } = useSignUp();
+  const methods = useForm<SignUpForm>();
+  const { createUser, isLoading, userCredentials } = useSignUp();
 
   useEffect(() => {
     if (!isLoading && userCredentials?.user) {
-      navigation.navigate("Login" as any)
+      navigation.navigate("Login" as any);
     }
-  }, [userCredentials, isLoading])
+  }, [userCredentials, isLoading]);
 
   return (
     <FormProvider {...methods}>
@@ -62,6 +61,7 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
             label="Password"
             formKey={"password"}
             placeholder="User Password"
+            secureTextEntry={true}
             rules={{ required: "Password is required" }}
           />
           <NavigationLink
@@ -73,12 +73,19 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
             style={{ marginTop: 15 }}
             icon="send"
             mode="contained"
-            onPress={methods.handleSubmit(async (data: SingUpForm) =>
+            onPress={methods.handleSubmit(async (data: SignUpForm) =>
               createUser(data.email, data.password, data.firstName, data.lastName)
             )}
           >
-            SingUp
+            Sign Up
           </Button>
+          {isLoading && (
+            <Modal transparent={false} animationType="none">
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator animating={true} size={120} />
+              </View>
+            </Modal>
+          )}
         </View>
       </ThemedView>
     </FormProvider>
@@ -86,8 +93,21 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { display: "flex", gap: 15, margin: 20, marginTop: 40 },
-  containerHeader: { fontWeight: 700, marginBottom: 10 },
+  container: {
+    display: "flex",
+    gap: 15,
+    margin: 20,
+    marginTop: 40
+  },
+  containerHeader: {
+    fontWeight: "700",
+    marginBottom: 10
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  }
 });
 
 export default SignUpScreen;
