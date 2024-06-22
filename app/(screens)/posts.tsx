@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import usePosts from "@/hooks/usePosts";
-import { useFocusEffect } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import PostCard from "@/components/PostCard";
 
@@ -26,12 +25,6 @@ const PostsScreen = () => {
     errorMessage,
     setIsError,
   } = usePosts();
-
-  useFocusEffect(
-    useCallback(() => {
-      handleRefresh();
-    }, [])
-  );
 
   return (
     <ThemedView>
@@ -79,6 +72,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: 14,
     paddingBottom: 8,
+    paddingTop: 16,
   },
   searchInput: {
     height: 40,
