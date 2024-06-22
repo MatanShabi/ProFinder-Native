@@ -6,6 +6,7 @@ import PostsScreen from "@/app/(screens)/posts";
 import LogoutScreen from "@/app/(screens)/logout";
 import ProfileScreen from "@/app/(screens)/profile";
 import AboutUsScreen from "@/app/(screens)/aboutus";
+import AddPostScreen from "@/app/(screens)/addpost";
 import PrivacyPolicyScreen from "@/app/(screens)/privacypolicy";
 import useUser from "@/hooks/useUser";
 import { Avatar, Drawer as PaperDrawer, Text } from "react-native-paper";
@@ -35,7 +36,9 @@ const DrawerNavigation = () => {
         drawerContent={(props) => (
           <View style={{ flex: 1 }}>
             <PaperDrawer.Section>
-              <TouchableOpacity onPress={() => props.navigation.navigate("Profile")}>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("Profile")}
+              >
                 <View style={styles.avatarContainer}>
                   <Avatar.Image
                     size={80}
@@ -108,6 +111,11 @@ const DrawerNavigation = () => {
           options={{
             title: "Logout",
           }}
+        />
+        <Drawer.Screen
+          name="AddPost"
+          component={AddPostScreen}
+          options={{ title: "New Post" }}
         />
       </Drawer.Navigator>
     </NavigationContainer>
