@@ -5,14 +5,18 @@ import {
   Modal,
   TextInput,
   TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { Avatar, Text, IconButton, Button, FAB } from "react-native-paper";
 import { ThemedView } from "@/components/ThemedView";
 import useProfile from "@/hooks/useProfile";
+import usePosts from "@/hooks/usePosts";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import PostCard from "@/components/PostCard"; 
 
 const ProfileScreen: FC = () => {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -22,11 +26,11 @@ const ProfileScreen: FC = () => {
     modalName,
     imageUrl,
     modalVisible,
-    isLoading,
-    isError,
-    errorMessage,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+    errorMessage: profileErrorMessage,
     setModalName,
-    setIsError,
+    setIsError: setProfileIsError,
     handleEdit,
     handleSave,
     handleDelete,
@@ -34,6 +38,16 @@ const ProfileScreen: FC = () => {
     handleChangeProfilePicture,
     setModalVisible,
   } = useProfile();
+
+  const {
+    posts,
+    isLoading: isPostsLoading,
+    isError: isPostsError,
+    refreshing,
+    handleRefresh,
+    errorMessage: postsErrorMessage,
+    setIsError: setPostsIsError,
+  } = usePosts(true); 
 
   return (
     <ThemedView>
@@ -82,13 +96,13 @@ const ProfileScreen: FC = () => {
               style={styles.input}
             />
             <View style={styles.modalButtons}>
-              <Button mode="outlined" onPress={handleSave} disabled={isLoading}>
+              <Button mode="outlined" onPress={handleSave} disabled={isProfileLoading}>
                 Save
               </Button>
               <Button
                 mode="outlined"
                 onPress={handleCancel}
-                disabled={isLoading}
+                disabled={isProfileLoading}
               >
                 Cancel
               </Button>
@@ -97,15 +111,40 @@ const ProfileScreen: FC = () => {
         </View>
       </Modal>
 
-      {isError && (
+      {isProfileError && (
         <ErrorNotification
-          visible={isError}
-          errorMessage={errorMessage}
+          visible={isProfileError}
+          errorMessage={profileErrorMessage}
           onDismiss={() => {
-            setIsError(false);
+            setProfileIsError(false);
           }}
         />
       )}
+
+      {isPostsLoading && !refreshing ? (
+        <View style={styles.center}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : isPostsError && !refreshing ? (
+        <ErrorNotification
+          visible={isPostsError}
+          errorMessage={postsErrorMessage}
+          onDismiss={() => {
+            setPostsIsError(false);
+          }}
+        />
+      ) : (
+        <FlatList
+          data={posts}
+          renderItem={({ item }) => <PostCard post={item} />}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+        />
+      )}
+
       <FAB
         style={styles.fab}
         icon={() => <Icon name="plus" size={24} color="white" />}
@@ -117,9 +156,8 @@ const ProfileScreen: FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
-    padding: 16,
+    paddingTop: 8,
   },
   avatarContainer: {
     flexDirection: "row",
@@ -167,12 +205,20 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 10,
   },
+  list: {
+    padding: 14,
+  },
   fab: {
     position: "absolute",
     right: "50%",
     bottom: 20,
     transform: [{ translateX: 30 }],
     zIndex: 1,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
