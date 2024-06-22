@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Modal,
 } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button, IconButton, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import useAddPost from "../../hooks/useAddPost";
@@ -32,6 +32,7 @@ const AddPostScreen = () => {
     setPrice,
     setIsError,
     handlePickImage,
+    handleDeleteImage,
     handleSubmit,
   } = useAddPost(navigation);
 
@@ -70,20 +71,30 @@ const AddPostScreen = () => {
       />
       {errors.price && <Text style={styles.error}>{errors.price}</Text>}
       <View style={styles.imagePicker}>
-        <Button mode="outlined" onPress={handlePickImage}>
-          {image ? "Change Image" : "Add Image"}
-        </Button>
-        {image && <Image source={{ uri: image }} style={styles.imagePreview} />}
+        {image ? (
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: image }} style={styles.imagePreview} />
+            <IconButton
+              icon="close"
+              size={20}
+              onPress={handleDeleteImage}
+              style={styles.deleteButton}
+              accessibilityLabel="Delete Image"
+            />
+          </View>
+        ) : (
+          <Button mode="outlined" onPress={handlePickImage}>
+            Add Image
+          </Button>
+        )}
       </View>
-      {isLoading ? 
-      (
+      {isLoading ? (
         <Modal transparent={false} animationType="none">
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator animating={true} size={120} />
-        </View>
-      </Modal>
-      ) : 
-      (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator animating={true} size={120} />
+          </View>
+        </Modal>
+      ) : (
         <Button
           mode="contained"
           onPress={handleSubmit}
@@ -126,10 +137,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
+  imageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   imagePreview: {
     marginTop: 10,
     width: 100,
     height: 100,
+    borderRadius: 10,
+  },
+  deleteButton: {
+    position: "absolute",
+    top: 5,
+    right: -10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
   },
   submitButton: {
     marginTop: 20,

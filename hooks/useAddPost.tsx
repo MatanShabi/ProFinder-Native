@@ -8,6 +8,8 @@ import { NavigationProp } from "@react-navigation/native";
 import { useFocusEffect } from "expo-router/build/useFocusEffect";
 import { generateRandomName } from "../scripts/generateRandomName";
 
+const DEFAULT_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/profilePictures%2Fdefault_post_image.jpg?alt=media&token=82055e58-321e-4caf-9e44-4ee4c1bbf99a";
+
 const useAddPost = (navigation: NavigationProp<any>) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -61,6 +63,10 @@ const useAddPost = (navigation: NavigationProp<any>) => {
     }
   };
 
+  const handleDeleteImage = () => {
+    setImage(null);
+  };
+
   const validate = () => {
     let valid = true;
     let newErrors = { title: "", description: "", link: "", price: "" };
@@ -96,7 +102,8 @@ const useAddPost = (navigation: NavigationProp<any>) => {
       setError(null);
 
       try {
-        let downloadURL = null;
+        let downloadURL = DEFAULT_IMAGE_URL; 
+
         if (image !== null) {
           const imageFileName = generateRandomName() + "." + image.split(".").pop();
           const response = await fetch(image);
@@ -119,7 +126,7 @@ const useAddPost = (navigation: NavigationProp<any>) => {
           userEmail: user?.email,
         };
 
-        await addDoc(collection(db, "Posts"), newPost); 
+        await addDoc(collection(db, "Posts"), newPost);
         navigation.goBack();
       } catch (e) {
         console.error("Error uploading post:", e);
@@ -150,6 +157,7 @@ const useAddPost = (navigation: NavigationProp<any>) => {
     setPrice,
     setIsError,
     handlePickImage,
+    handleDeleteImage,  
     handleSubmit,
   };
 };
