@@ -8,6 +8,7 @@ import {
 import { auth, storage } from "../config/firebase";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { handlePictureAPI } from '../scripts/handlePictureAPI';
+import { generateRandomName } from '../scripts/generateRandomName';
 
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,14 +29,6 @@ const useSignUp = () => {
     }
   };
 
-  const generateRandomName = () => {
-    const characters = '0123456789abcdefghijklmnop';
-    let result = '';
-    for (let i = 0; i < 40; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result + '.png';
-  };
 
   const createUser = async (
     email: string,
@@ -47,19 +40,17 @@ const useSignUp = () => {
     setIsError(false);
     try {
       const pictureBlob = await handlePictureAPI(firstName, lastName);
-      const fileName = generateRandomName();
+      const fileName = generateRandomName() + ".png";
       const storageRef = ref(storage, `profilePictures/${fileName}`);
       await uploadBytes(storageRef, pictureBlob);
 
       const downloadURL = await getDownloadURL(storageRef);
       const user = await createUserWithEmailAndPassword(auth, email, password);
       await updateUserProfile(user.user, firstName, lastName, downloadURL);
-      console.log('downloadURL', downloadURL);
       setUserCredentials(user);
 
     } catch (error) {
       setIsError(true);
-      console.error("Error creating user: ", error);
     } finally {
       setIsLoading(false);
     }
