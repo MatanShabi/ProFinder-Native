@@ -1,19 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebase";
+import useUser from "@/hooks/useUser";
 
 export type Post = {
-    id: string;
-    title: string;
-    description: string;
-    imageURL?: string;
-    link: string;
-    price: number;
-    userEmail: string;
-    lastUpdate: any;
-  };
+  id: string;
+  title: string;
+  description: string;
+  imageURL?: string;
+  link: string;
+  price: number;
+  userEmail: string;
+  lastUpdate: any;
+};
 
-const usePosts = () => {
+const usePosts = (filterByUser: boolean = false) => {
+  const { user } = useUser();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -26,7 +28,7 @@ const usePosts = () => {
     setIsError(false);
     try {
       const querySnapshot = await getDocs(collection(db, "Posts"));
-      const fetchedPosts: Post[] = querySnapshot.docs.map((doc) => ({
+      let fetchedPosts: Post[] = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Post[];
@@ -34,6 +36,10 @@ const usePosts = () => {
       fetchedPosts.sort(
         (a, b) => b.lastUpdate.toMillis() - a.lastUpdate.toMillis()
       );
+
+      if (filterByUser && user) {
+        fetchedPosts = fetchedPosts.filter(post => post.userEmail === user.email);
+      }
 
       setPosts(fetchedPosts);
     } catch (error: any) {
@@ -43,7 +49,7 @@ const usePosts = () => {
       setIsLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [filterByUser, user]);
 
   useEffect(() => {
     fetchPosts();
