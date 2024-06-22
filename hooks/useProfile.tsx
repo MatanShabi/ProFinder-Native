@@ -6,6 +6,7 @@ import { deleteUser } from "firebase/auth";
 import * as ImagePicker from 'expo-image-picker';
 import useUser from '@/hooks/useUser';
 import useSignUp from '@/hooks/useSignUp';
+import { generateRandomName } from "../scripts/generateRandomName";
 
 const useProfile = () => {
     const { user } = useUser();
@@ -110,7 +111,7 @@ const useProfile = () => {
             setIsLoading(true);
             const assetUri = result.assets[0].uri;
             const blob = await uriToBlob(assetUri);
-            const fileName = generateRandomName();
+            const fileName = generateRandomName() + '.png';
             const storageRef = ref(storage, `profilePictures/${fileName}`);
             await uploadBytes(storageRef, blob as Blob | Uint8Array | ArrayBuffer);
             const downloadURL = await getDownloadURL(storageRef);
@@ -140,15 +141,6 @@ const useProfile = () => {
             xhr.open('GET', uri, true);
             xhr.send(null);
         });
-    };
-
-    const generateRandomName = (): string => {
-        const characters = '0123456789abcdefghijklmnop';
-        let result = '';
-        for (let i = 0; i < 40; i++) {
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        return result + '.png';
     };
 
     return {
