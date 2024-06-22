@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -13,7 +13,7 @@ import { Avatar, Text, IconButton, Button, FAB } from "react-native-paper";
 import { ThemedView } from "@/components/ThemedView";
 import useProfile from "@/hooks/useProfile";
 import usePosts from "@/hooks/usePosts";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation, useFocusEffect } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PostCard from "@/components/PostCard"; 
@@ -47,7 +47,13 @@ const ProfileScreen: FC = () => {
     handleRefresh,
     errorMessage: postsErrorMessage,
     setIsError: setPostsIsError,
-  } = usePosts(true); 
+  } = usePosts(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      handleRefresh();
+    }, [])
+  );
 
   return (
     <ThemedView>

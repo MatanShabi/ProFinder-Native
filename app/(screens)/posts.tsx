@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -8,11 +8,13 @@ import {
   RefreshControl,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import usePosts from "@/hooks/usePosts"; 
+import usePosts from "@/hooks/usePosts";
+import { useFocusEffect } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import PostCard from "@/components/PostCard";
 
 const PostsScreen = () => {
+
   const {
     posts,
     isLoading,
@@ -24,6 +26,12 @@ const PostsScreen = () => {
     errorMessage,
     setIsError,
   } = usePosts();
+
+  useFocusEffect(
+    useCallback(() => {
+      handleRefresh();
+    }, [])
+  );
 
   return (
     <ThemedView>
