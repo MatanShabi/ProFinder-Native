@@ -129,7 +129,6 @@ const useAddPost = (navigation: NavigationProp<any>) => {
         await addDoc(collection(db, "Posts"), newPost);
         navigation.goBack();
       } catch (e) {
-        console.error("Error uploading post:", e);
         setIsError(true);
         setError("Failed to upload post. Please try again later.");
       } finally {

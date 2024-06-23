@@ -43,7 +43,6 @@ const useProfile = () => {
             setDisplayName(modalName);
             setModalVisible(false);
         } catch (error) {
-            console.error('Failed to update profile', error);
             setIsError(true);
             setErrorMessage('Failed to update profile');
         } finally {
@@ -78,7 +77,7 @@ const useProfile = () => {
                             }
                         } catch (error) {
                             setIsError(true);
-                            console.error("Error deleting user: ", error);
+                            setErrorMessage('Failed to delete user account');
                         } finally {
                             setIsLoading(false);
                         }
@@ -120,7 +119,6 @@ const useProfile = () => {
                 await updateUserProfile(user, displayName, '', downloadURL);
             }
         } catch (error) {
-            console.error('Failed to upload image', error);
             setIsError(true);
             setErrorMessage('Failed to upload image');
         } finally {

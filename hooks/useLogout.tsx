@@ -34,7 +34,6 @@ const useLogout = () => {
                             setIsError(false);
                             setError(null);
                         } catch (error: any) {
-                            console.error("Error signing out:", error);
                             setIsError(true);
                             setError(error.message ? String(error.message) : "Failed to sign out");
                         } finally {
