@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
 import { Snackbar, useTheme } from 'react-native-paper';
 
 interface ErrorSnackbarProps {

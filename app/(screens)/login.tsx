@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import Header from "@/components/Header";
 import { StyleSheet, View, Modal } from "react-native";
 import { Button, Text, ActivityIndicator } from "react-native-paper";

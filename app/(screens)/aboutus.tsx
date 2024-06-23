@@ -1,4 +1,4 @@
-import React, { FC, useState} from 'react';
+import React, { FC } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Avatar, Text, Title, Paragraph } from 'react-native-paper';
 

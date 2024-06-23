@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "react-native-reanimated";
-import { User, onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/config/firebase";
 import { theme } from "@/constants/theme";
 import { PaperProvider } from "react-native-paper";
 import DrawerNavigation from "@/components/navigation/DrawerNavigation";
