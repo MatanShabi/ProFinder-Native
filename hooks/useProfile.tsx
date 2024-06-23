@@ -3,6 +3,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Alert } from "react-native";
 import { storage } from '@/config/firebase';
 import { deleteUser } from "firebase/auth";
+import { auth } from "@/config/firebase";
 import * as ImagePicker from 'expo-image-picker';
 import useUser from '@/hooks/useUser';
 import useSignUp from '@/hooks/useSignUp';
@@ -55,7 +56,7 @@ const useProfile = () => {
         setModalVisible(false);
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         Alert.alert(
             "Confirm Deletion",
             "Are you sure you want to delete the account?",
@@ -70,14 +71,15 @@ const useProfile = () => {
                     onPress: async () => {
                         setIsLoading(true);
                         setIsError(false);
+                        console.log('Deleting user account...');
                         try {
                             if (user) {
                                 await deleteUser(user);
-                                console.log('User account deleted successfully.');
-                            }
-                        } catch (error) {
+                            } 
+                            console.log('User account deleted successfully.');
+                        } catch (error: any) { 
                             setIsError(true);
-                            setErrorMessage('Failed to delete user account');
+                            setErrorMessage(error.message || 'Failed to delete user account. Please try again later.');
                         } finally {
                             setIsLoading(false);
                         }
