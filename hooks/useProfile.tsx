@@ -3,7 +3,6 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Alert } from "react-native";
 import { storage } from '@/config/firebase';
 import { deleteUser } from "firebase/auth";
-import { auth } from "@/config/firebase";
 import * as ImagePicker from 'expo-image-picker';
 import useUser from '@/hooks/useUser';
 import useSignUp from '@/hooks/useSignUp';
