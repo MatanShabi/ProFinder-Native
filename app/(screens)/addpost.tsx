@@ -91,7 +91,7 @@ const AddPostScreen = () => {
       {isLoading ? (
         <Modal transparent={false} animationType="none">
           <View style={styles.loadingContainer}>
-            <ActivityIndicator animating={true} size={120} />
+            <ActivityIndicator animating={true} size={120}/>
           </View>
         </Modal>
       ) : (
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
+    backgroundColor: "#fff",
   },
   input: {
     borderWidth: 1,
