@@ -13,9 +13,7 @@ import { generateRandomName } from '../scripts/generateRandomName';
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [userCredentials, setUserCredentials] = useState<
-    UserCredential | undefined
-  >(undefined);
+  const [userCredentials, setUserCredentials] = useState<UserCredential | undefined>(undefined);
 
   const updateUserProfile = async (user: User,
     firstName: string,

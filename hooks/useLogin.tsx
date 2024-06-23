@@ -4,9 +4,7 @@ import { auth } from "../config/firebase";
 const useLogin = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [userCradentials, SetUserCrendntials] = useState<
-    UserCredential | undefined
-  >(undefined);
+  const [userCradentials, SetUserCrendntials] = useState<UserCredential | undefined>(undefined);
 
   const handleLogin = async (email: string, password: string) => {
     try {
