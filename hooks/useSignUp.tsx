@@ -3,13 +3,12 @@ import {
   User,
   UserCredential,
   createUserWithEmailAndPassword,
-  updateProfile
+  updateProfile,
 } from "firebase/auth";
 import { auth, storage } from "../config/firebase";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { handlePictureAPI } from '../scripts/handlePictureAPI';
 import { generateRandomName } from '../scripts/generateRandomName';
-
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -27,7 +26,6 @@ const useSignUp = () => {
     }
   };
 
-
   const createUser = async (
     email: string,
     password: string,
@@ -41,9 +39,9 @@ const useSignUp = () => {
       const fileName = generateRandomName() + ".png";
       const storageRef = ref(storage, `profilePictures/${fileName}`);
       await uploadBytes(storageRef, pictureBlob);
-
       const downloadURL = await getDownloadURL(storageRef);
       const user = await createUserWithEmailAndPassword(auth, email, password);
+      auth.signOut();
       await updateUserProfile(user.user, firstName, lastName, downloadURL);
       setUserCredentials(user);
 
