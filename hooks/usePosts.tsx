@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import useUser from "@/hooks/useUser";
+import { auth } from "@/config/firebase";
 
 export type Post = {
   id: string;
@@ -37,11 +38,15 @@ const usePosts = (filterByUser: boolean = false) => {
         (a, b) => b.lastUpdate.toMillis() - a.lastUpdate.toMillis()
       );
 
-      if (filterByUser && user) {
-        fetchedPosts = fetchedPosts.filter(post => post.userEmail === user.email);
+      if (filterByUser) {
+        if (user)
+          fetchedPosts = fetchedPosts.filter(post => post.userEmail === user.email);
+        else{
+          fetchedPosts = fetchedPosts.filter(post => post.userEmail === auth.currentUser?.email);
+        }
       }
-
       setPosts(fetchedPosts);
+
     } catch (error: any) {
       setIsError(true);
       setErrorMessage(error.message || "Unknown error occurred");
@@ -49,7 +54,8 @@ const usePosts = (filterByUser: boolean = false) => {
       setIsLoading(false);
       setRefreshing(false);
     }
-  }, [filterByUser, user]);
+
+  }, [filterByUser]);
 
   useEffect(() => {
     fetchPosts();
