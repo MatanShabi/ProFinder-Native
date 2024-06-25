@@ -1,24 +1,42 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { Post } from '../../../types/post'
+import { getAllPosts } from "./thunk";
 
-const initialState = {
-  user: {},
-  isLoggedIn: false,
+export interface PostsState {
+  posts: Post[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
 }
 
-const userSlice = createSlice({
-  name: 'userSlice',
+const initialState: PostsState = {
+  posts: [],
+  status: 'idle',
+  error: null,
+};
+
+const postsSlice = createSlice({
+  name: 'postsSlice',
   initialState,
   reducers: {
-    signIn: (state, action) => {
-      state.user = {...state.user, ...action.payload}
-      state.isLoggedIn = true
+    removePost: (state, action: PayloadAction<{ id: string }>) => {
+      state.posts = state.posts.filter(post => post.id !== action.payload.id);
     },
-    signOut: (state) => {
-      state.user = {}
-      state.isLoggedIn = false
-    }
-  }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllPosts.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getAllPosts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.posts = action.payload;
+      })
+      .addCase(getAllPosts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to fetch posts';
+      });
+  },
 })
+export const { removePost } = postsSlice.actions;
 
-export const {signIn, signOut} = userSlice.actions
-export default userSlice.reducer
+export default postsSlice.reducer

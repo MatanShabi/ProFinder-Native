@@ -3,17 +3,9 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import useUser from "@/hooks/useUser";
 import { auth } from "@/config/firebase";
+import { Post } from "@/types/post";
 
-export type Post = {
-  id: string;
-  title: string;
-  description: string;
-  imageURL?: string;
-  link: string;
-  price: number;
-  userEmail: string;
-  lastUpdate: any;
-};
+
 
 const usePosts = (filterByUser: boolean = false) => {
   const { user } = useUser();
