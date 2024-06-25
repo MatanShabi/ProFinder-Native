@@ -1,7 +1,7 @@
+import { Post } from "@/types/post";
 import React from "react";
 import { StyleSheet, TouchableOpacity, Linking } from "react-native";
 import { Card, Title, Paragraph, Subheading, Text } from "react-native-paper";
-import { Post } from "@/hooks/usePosts"; 
 
 interface PostCardProps {
   post: Post;
