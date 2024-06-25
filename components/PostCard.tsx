@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: 16,
     borderRadius: 10,
-    overflow: "hidden",
     borderWidth: 1,
     borderColor: "#ddd",
     elevation: 0,
