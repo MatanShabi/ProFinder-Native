@@ -52,7 +52,7 @@ const PostsScreen = () => {
               post={item}
               isAdmin={item.userEmail == user?.email}
               handleDeletePost={handleDeletePost}
-              handleEditPost={handleDeletePost}
+              handleEditPost={handleEditPost}
             />
           )}
           keyExtractor={(item) => item?.id?.toString()!}

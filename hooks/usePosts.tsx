@@ -8,7 +8,7 @@ import { useNavigation } from "expo-router";
 
 const usePosts = (isUserProfile: boolean = false) => {
   const { user } = useUser();
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const dispatch = useAppDispatch();
   const navigation = useNavigation<any>()
   const { posts, isLoading, isError } = useAppSelector(selectAllPosts);

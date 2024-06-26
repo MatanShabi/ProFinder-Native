@@ -1,20 +1,20 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { storage } from "@/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 import useUser from "@/hooks/useUser";
 import { NavigationProp } from "@react-navigation/native";
-import { useFocusEffect } from "expo-router/build/useFocusEffect";
 import { generateRandomName } from "../scripts/generateRandomName";
 import { useAppDispatch } from "@/store/hooks";
-import { createPost } from "@/store/slices/posts/thunk";
+import { createPost, updatePost } from "@/store/slices/posts/thunk";
 import { useSelector } from "react-redux";
 import { selectCreatePost } from "@/store/slices/posts/selector";
+import { Post } from "@/types/post";
 
 const DEFAULT_IMAGE_URL =
   "https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/profilePictures%2Fdefault_post_image.jpg?alt=media&token=82055e58-321e-4caf-9e44-4ee4c1bbf99a";
 
-const useAddPost = (navigation: NavigationProp<any>) => {
+const useAddPost = (navigation: NavigationProp<any>, editPost: Post | undefined) => {
   const { user } = useUser();
 
   const [title, setTitle] = useState("");
@@ -34,19 +34,24 @@ const useAddPost = (navigation: NavigationProp<any>) => {
 
   const { isLoading, isError, error } = useSelector(selectCreatePost);
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        setTitle("");
-        setDescription("");
-        setLink("");
-        setPrice("");
-        setImage(null);
-        setErrors({ title: "", description: "", link: "", price: "" });
-      };
-    }, []),
-  );
-
+  useEffect(() => {
+    if (editPost?.id) {
+      const { title, description, link, price, imageURL } = editPost;
+      setTitle(title)
+      setDescription(description)
+      setLink(link)
+      setPrice(price.toString())
+      setImage(imageURL||'')
+    }
+    else {  
+      setTitle('')
+      setDescription('')
+      setLink('')
+      setPrice('')
+      setImage('')
+    }
+  }, [])
+  
   const handlePickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -113,17 +118,32 @@ const useAddPost = (navigation: NavigationProp<any>) => {
           downloadURL = await getDownloadURL(storageRef);
         }
 
-        dispatch(
-          createPost({
-            title,
-            description,
-            link,
-            price: parseFloat(price),
-            imageURL: downloadURL,
-            userEmail: user?.email || "",
-            lastUpdate: new Date(),
-          }),
-        );
+        if(!editPost?.id){
+          dispatch(
+            createPost({
+              title,
+              description,
+              link,
+              price: parseFloat(price),
+              imageURL: downloadURL,
+              userEmail: user?.email || "",
+              lastUpdate: new Date(),
+            }),
+          );
+        }else{
+          dispatch(updatePost({
+            id: editPost.id,
+            updatedPost:{
+              title,
+              description,
+              link,
+              price: parseFloat(price),
+              imageURL: downloadURL,
+              userEmail: user?.email || "",
+              lastUpdate: new Date(),
+          }}))
+        }
+        
 
         navigation.goBack();
       } catch (e) {

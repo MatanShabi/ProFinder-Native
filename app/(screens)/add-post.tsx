@@ -12,10 +12,13 @@ import { Button, IconButton, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import useAddPost from "../../hooks/useAddPost";
+import { useLocalSearchParams } from "expo-router";
+import { Post } from "@/types/post";
 
 const AddPostScreen = () => {
   const navigation = useNavigation<any>();
-
+  const editPost = useLocalSearchParams() as any;
+  
   const {
     title,
     description,
@@ -33,7 +36,7 @@ const AddPostScreen = () => {
     handlePickImage,
     handleDeleteImage,
     handleSubmit,
-  } = useAddPost(navigation);
+  } = useAddPost(navigation, editPost);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
