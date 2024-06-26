@@ -3,19 +3,23 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectAllPosts } from "@/store/slices/posts/selector";
 import { deletePost, getAllPosts } from "@/store/slices/posts/thunk";
 import useUser from "./useUser";
+import { Post } from "@/types/post";
+import { useNavigation } from "expo-router";
 
 const usePosts = (isUserProfile: boolean = false) => {
   const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const dispatch = useAppDispatch();
+  const navigation = useNavigation<any>()
   const { posts, isLoading, isError } = useAppSelector(selectAllPosts);
+  
 
   useEffect(() => {
     dispatch(getAllPosts);
   }, [isUserProfile]);
 
-  const handleEditPost = (postId: string) => {
-    console.log("delete post", postId);
+  const handleEditPost = (post: Post) => {
+    navigation.navigate("AddPost", post);
   };
 
   const handleDeletePost = (postId: string) => {

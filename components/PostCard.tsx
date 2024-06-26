@@ -1,4 +1,3 @@
-import useUser from "@/hooks/useUser";
 import { Post } from "@/types/post";
 import React from "react";
 import { StyleSheet, TouchableOpacity, Linking, View } from "react-native";
@@ -14,7 +13,7 @@ import {
 interface PostCardProps {
   post: Post;
   isAdmin: boolean;
-  handleEditPost: (postId: string) => void;
+  handleEditPost: (post: Post) => void;
   handleDeletePost: (postId: string) => void;
 }
 
@@ -47,7 +46,7 @@ const PostCard: React.FC<PostCardProps> = ({
           <IconButton
             icon="pencil"
             iconColor="blue"
-            onPress={() => handleEditPost(post.id || "")}
+            onPress={() => handleEditPost(post)}
           />
         </View>
       )}
