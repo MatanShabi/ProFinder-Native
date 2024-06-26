@@ -11,11 +11,12 @@ import { createPost } from "@/store/slices/posts/thunk";
 import { useSelector } from "react-redux";
 import { selectCreatePost } from "@/store/slices/posts/selector";
 
-const DEFAULT_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/profilePictures%2Fdefault_post_image.jpg?alt=media&token=82055e58-321e-4caf-9e44-4ee4c1bbf99a";
+const DEFAULT_IMAGE_URL =
+  "https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/profilePictures%2Fdefault_post_image.jpg?alt=media&token=82055e58-321e-4caf-9e44-4ee4c1bbf99a";
 
 const useAddPost = (navigation: NavigationProp<any>) => {
   const { user } = useUser();
-  
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
@@ -31,7 +32,7 @@ const useAddPost = (navigation: NavigationProp<any>) => {
     price: "",
   });
 
-  const {isLoading, isError, error} = useSelector(selectCreatePost)
+  const { isLoading, isError, error } = useSelector(selectCreatePost);
 
   useFocusEffect(
     useCallback(() => {
@@ -43,7 +44,7 @@ const useAddPost = (navigation: NavigationProp<any>) => {
         setImage(null);
         setErrors({ title: "", description: "", link: "", price: "" });
       };
-    }, [])
+    }, []),
   );
 
   const handlePickImage = async () => {
@@ -59,7 +60,7 @@ const useAddPost = (navigation: NavigationProp<any>) => {
         setImage(result.assets[0].uri);
       }
     } catch (e) {
-      console.log('"Failed to pick image"')
+      console.log('"Failed to pick image"');
     }
   };
 
@@ -98,10 +99,11 @@ const useAddPost = (navigation: NavigationProp<any>) => {
   const handleSubmit = async () => {
     if (validate()) {
       try {
-        let downloadURL = DEFAULT_IMAGE_URL; 
+        let downloadURL = DEFAULT_IMAGE_URL;
 
         if (image !== null) {
-          const imageFileName = generateRandomName() + "." + image.split(".").pop();
+          const imageFileName =
+            generateRandomName() + "." + image.split(".").pop();
           const response = await fetch(image);
           const pictureBlob = await response.blob();
 
@@ -111,22 +113,24 @@ const useAddPost = (navigation: NavigationProp<any>) => {
           downloadURL = await getDownloadURL(storageRef);
         }
 
-        dispatch(createPost({
-          title,
-          description,
-          link,
-          price: parseFloat(price),
-          imageURL: downloadURL,
-          userEmail: user?.email || '',
-          lastUpdate: new Date()
-        }))
-          
+        dispatch(
+          createPost({
+            title,
+            description,
+            link,
+            price: parseFloat(price),
+            imageURL: downloadURL,
+            userEmail: user?.email || "",
+            lastUpdate: new Date(),
+          }),
+        );
+
         navigation.goBack();
       } catch (e) {
-        console.log("Failed to upload post. Please try again later.")
-      }        
+        console.log("Failed to upload post. Please try again later.");
+      }
     } else {
-      console.log("Validation Error: Please correct the errors in the form.")
+      console.log("Validation Error: Please correct the errors in the form.");
     }
   };
 
@@ -145,7 +149,7 @@ const useAddPost = (navigation: NavigationProp<any>) => {
     setLink,
     setPrice,
     handlePickImage,
-    handleDeleteImage,  
+    handleDeleteImage,
     handleSubmit,
   };
 };

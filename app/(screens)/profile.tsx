@@ -14,7 +14,7 @@ import useProfile from "@/hooks/useProfile";
 import usePosts from "@/hooks/usePosts";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import PostCard from "@/components/PostCard";
 import useUser from "@/hooks/useUser";
 
@@ -44,7 +44,7 @@ const ProfileScreen: FC = () => {
     isLoading: isPostsLoading,
     isError: isPostsError,
     handleDeletePost,
-    handleEditPost
+    handleEditPost,
   } = usePosts(true);
 
   const { user } = useUser();
@@ -96,7 +96,11 @@ const ProfileScreen: FC = () => {
               style={styles.input}
             />
             <View style={styles.modalButtons}>
-              <Button mode="outlined" onPress={handleSave} disabled={isProfileLoading}>
+              <Button
+                mode="outlined"
+                onPress={handleSave}
+                disabled={isProfileLoading}
+              >
                 Save
               </Button>
               <Button
@@ -126,19 +130,25 @@ const ProfileScreen: FC = () => {
           <ActivityIndicator size="large" />
         </View>
       ) : isPostsError ? (
-        <ErrorNotification
-          visible={isPostsError}
-          errorMessage={''}
-        />
+        <ErrorNotification visible={isPostsError} errorMessage={""} />
       ) : (
         <FlatList
           data={posts}
-          renderItem={({ item }) => <PostCard post={item} handleDeletePost={handleDeletePost} handleEditPost={handleEditPost} isAdmin={item.userEmail == user?.email} />}
-          keyExtractor={(item) => item.id || ''}
-          contentContainerStyle={styles.list}
-          getItemLayout={(data, index) => (
-            { length: posts.length, offset: 3 * index, index }
+          renderItem={({ item }) => (
+            <PostCard
+              post={item}
+              handleDeletePost={handleDeletePost}
+              handleEditPost={handleEditPost}
+              isAdmin={item.userEmail == user?.email}
+            />
           )}
+          keyExtractor={(item) => item.id || ""}
+          contentContainerStyle={styles.list}
+          getItemLayout={(data, index) => ({
+            length: posts.length,
+            offset: 3 * index,
+            index,
+          })}
         />
       )}
 

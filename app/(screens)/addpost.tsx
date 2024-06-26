@@ -30,7 +30,6 @@ const AddPostScreen = () => {
     setDescription,
     setLink,
     setPrice,
-    setIsError,
     handlePickImage,
     handleDeleteImage,
     handleSubmit,
@@ -91,7 +90,7 @@ const AddPostScreen = () => {
       {isLoading ? (
         <Modal transparent={false} animationType="none">
           <View style={styles.loadingContainer}>
-            <ActivityIndicator animating={true} size={120}/>
+            <ActivityIndicator animating={true} size={120} />
           </View>
         </Modal>
       ) : (
@@ -107,9 +106,6 @@ const AddPostScreen = () => {
         <ErrorNotification
           visible={isError}
           errorMessage={error || ""}
-          onDismiss={() => {
-            setIsError(false);
-          }}
         />
       )}
     </ScrollView>

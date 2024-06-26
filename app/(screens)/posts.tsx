@@ -20,7 +20,7 @@ const PostsScreen = () => {
     searchQuery,
     setSearchQuery,
     handleDeletePost,
-    handleEditPost
+    handleEditPost,
   } = usePosts();
 
   const { user } = useUser();
@@ -47,12 +47,21 @@ const PostsScreen = () => {
       ) : (
         <FlatList
           data={posts}
-          renderItem={({ item }) => <PostCard post={item} isAdmin={item.userEmail == user?.email} handleDeletePost={handleDeletePost} handleEditPost={handleDeletePost} />}
+          renderItem={({ item }) => (
+            <PostCard
+              post={item}
+              isAdmin={item.userEmail == user?.email}
+              handleDeletePost={handleDeletePost}
+              handleEditPost={handleDeletePost}
+            />
+          )}
           keyExtractor={(item) => item?.id?.toString()!}
           contentContainerStyle={styles.list}
-          getItemLayout={(data, index) => (
-            { length: posts.length, offset: 3 * index, index }
-          )}
+          getItemLayout={(data, index) => ({
+            length: posts.length,
+            offset: 3 * index,
+            index,
+          })}
         />
       )}
     </ThemedView>

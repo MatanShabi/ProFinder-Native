@@ -1,17 +1,19 @@
-import React, { FC } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Text, Title, Paragraph } from 'react-native-paper';
+import React, { FC } from "react";
+import { View, ScrollView, StyleSheet } from "react-native";
+import { Avatar, Text, Title, Paragraph } from "react-native-paper";
 
-const AboutUsScreen : FC = () => {
+const AboutUsScreen: FC = () => {
   const teamMembers = [
     {
       name: "Raz Hagay Gavriel",
-      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/teamMembers%2Fraz.jpeg?alt=media&token=c695a6e9-7706-4562-ac44-d8f83cec52e6',
+      imageUrl:
+        "https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/teamMembers%2Fraz.jpeg?alt=media&token=c695a6e9-7706-4562-ac44-d8f83cec52e6",
       phoneNumber: "(+972)50-960-5540",
     },
     {
       name: "Matan Shabi",
-      imageUrl: 'https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/teamMembers%2Fmatan.jpeg?alt=media&token=47128498-a1fd-4f71-a063-2ad12cc10ac0',
+      imageUrl:
+        "https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/teamMembers%2Fmatan.jpeg?alt=media&token=47128498-a1fd-4f71-a063-2ad12cc10ac0",
       phoneNumber: "(+972)54-831-5013",
     },
   ];
@@ -19,7 +21,6 @@ const AboutUsScreen : FC = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
-
         <Paragraph style={styles.paragraph}>
           This is a social media app that allows users to share and compare the
           products they buy. Users can post about their latest purchases,
@@ -55,19 +56,19 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   card: {
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 20,
-    width: '90%',
-    marginHorizontal: 'auto',
-    backgroundColor: '#FFF',
+    width: "90%",
+    marginHorizontal: "auto",
+    backgroundColor: "#FFF",
     borderRadius: 10,
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 24,
     marginBottom: 10,
   },
@@ -77,32 +78,32 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   teamContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
     marginTop: 10,
   },
   memberCard: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
-    width: '45%',
+    width: "45%",
   },
   avatar: {
     marginBottom: 10,
   },
   memberName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
-    textAlign: 'center',
+    textAlign: "center",
   },
   memberPhoneNumber: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

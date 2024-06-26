@@ -6,22 +6,26 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, storage } from "../config/firebase";
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { handlePictureAPI } from '../scripts/handlePictureAPI';
-import { generateRandomName } from '../scripts/generateRandomName';
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { handlePictureAPI } from "../scripts/handlePictureAPI";
+import { generateRandomName } from "../scripts/generateRandomName";
 const useSignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [userCredentials, setUserCredentials] = useState<UserCredential | undefined>(undefined);
+  const [userCredentials, setUserCredentials] = useState<
+    UserCredential | undefined
+  >(undefined);
 
-  const updateUserProfile = async (user: User,
+  const updateUserProfile = async (
+    user: User,
     firstName: string,
     lastName: string,
-    photoUrl: string) => {
+    photoUrl: string,
+  ) => {
     if (user) {
       await updateProfile(user, {
         displayName: `${firstName} ${lastName}`,
-        photoURL: photoUrl
+        photoURL: photoUrl,
       });
     }
   };
@@ -30,7 +34,7 @@ const useSignUp = () => {
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
   ) => {
     setIsLoading(true);
     setIsError(false);
@@ -44,7 +48,6 @@ const useSignUp = () => {
       auth.signOut();
       await updateUserProfile(user.user, firstName, lastName, downloadURL);
       setUserCredentials(user);
-
     } catch (error) {
       setIsError(true);
     } finally {
