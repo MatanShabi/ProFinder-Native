@@ -5,7 +5,6 @@ import {
   FlatList,
   ActivityIndicator,
   TextInput,
-  RefreshControl,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import usePosts from "@/hooks/usePosts";
@@ -13,17 +12,12 @@ import ErrorNotification from "@/components/ErrorNotification";
 import PostCard from "@/components/PostCard";
 
 const PostsScreen = () => {
-
   const {
     posts,
     isLoading,
     isError,
-    refreshing,
     searchQuery,
     setSearchQuery,
-    handleRefresh,
-    errorMessage,
-    setIsError,
   } = usePosts();
 
   return (
@@ -36,27 +30,21 @@ const PostsScreen = () => {
           value={searchQuery}
         />
       </View>
-      {isLoading && !refreshing ? (
+      {isLoading ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      ) : isError && !refreshing ? (
+      ) : isError ? (
         <ErrorNotification
           visible={isError}
-          errorMessage={errorMessage}
-          onDismiss={() => {
-            setIsError(false);
-          }}
+          errorMessage="Failed to load posts"
         />
       ) : (
         <FlatList
           data={posts}
           renderItem={({ item }) => <PostCard post={item} />}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.list}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-          }
         />
       )}
     </ThemedView>

@@ -33,7 +33,7 @@ const postsSlice = createSlice({
       })
       .addCase(getAllPosts.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message || 'Failed to fetch posts';
+        state.error = action.error.message || null;
       });
   },
 })

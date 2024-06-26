@@ -1,29 +1,18 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Post } from '@/types/post';
+import { db } from '@/config/firebase';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { collection, getDocs } from 'firebase/firestore';
 
-const mockPosts: Post[] = [
-  {
-    id: '1',
-    title: 'Sample Post 1',
-    description: 'Description for Sample Post 1',
-    imageURL: 'https://example.com/image1.jpg',
-    link: 'https://example.com/post1',
-    price: 100,
-    userEmail: 'user@example.com',
-    lastUpdate: new Date(),
-  },
-  {
-    id: '2',
-    title: 'Sample Post 2',
-    description: 'Description for Sample Post 2',
-    imageURL: 'https://example.com/image2.jpg',
-    link: 'https://example.com/post2',
-    price: 150,
-    userEmail: 'user@example.com',
-    lastUpdate: new Date(),
-  },
-];
 
 export const getAllPosts = createAsyncThunk<Post[]>('posts/getAllPosts', async () => {
-  return mockPosts;
+    const querySnapshot = await getDocs(collection(db, "Posts"));
+    let fetchedPosts: Post[] = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Post[];
+
+    fetchedPosts.sort(
+      (a, b) => b.lastUpdate.toMillis() - a.lastUpdate.toMillis()
+    );
+    return fetchedPosts
 });

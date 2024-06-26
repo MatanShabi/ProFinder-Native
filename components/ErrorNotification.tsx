@@ -4,11 +4,11 @@ import { Snackbar, useTheme } from 'react-native-paper';
 
 interface ErrorSnackbarProps {
   visible: boolean;
-  onDismiss: () => void;
+  onDismiss?: () => void;
   errorMessage: string;
 }
 
-const ErrorNotification: React.FC<ErrorSnackbarProps> = ({ visible, onDismiss, errorMessage }) => {
+const ErrorNotification: React.FC<ErrorSnackbarProps> = ({ visible, onDismiss= () => {}, errorMessage }) => {
     const theme = useTheme();
 
     if (!visible) {
