@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
-  RefreshControl,
 } from "react-native";
 import { Avatar, Text, IconButton, Button, FAB } from "react-native-paper";
 import { ThemedView } from "@/components/ThemedView";
@@ -43,10 +42,6 @@ const ProfileScreen: FC = () => {
     posts,
     isLoading: isPostsLoading,
     isError: isPostsError,
-    refreshing,
-    handleRefresh,
-    errorMessage: postsErrorMessage,
-    setIsError: setPostsIsError,
   } = usePosts(true);
 
   return (
@@ -121,17 +116,14 @@ const ProfileScreen: FC = () => {
         />
       )}
 
-      {isPostsLoading && !refreshing ? (
+      {isPostsLoading ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      ) : isPostsError && !refreshing ? (
+      ) : isPostsError ? (
         <ErrorNotification
           visible={isPostsError}
-          errorMessage={postsErrorMessage}
-          onDismiss={() => {
-            setPostsIsError(false);
-          }}
+          errorMessage={''}
         />
       ) : (
         <FlatList
@@ -139,9 +131,6 @@ const ProfileScreen: FC = () => {
           renderItem={({ item }) => <PostCard post={item} />}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-          }
         />
       )}
 
