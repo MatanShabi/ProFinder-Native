@@ -1,22 +1,28 @@
 import { useState, useCallback } from "react";
-import { db, storage } from "@/config/firebase";
+import { storage } from "@/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
-import { addDoc, collection } from "firebase/firestore";
 import useUser from "@/hooks/useUser";
 import { NavigationProp } from "@react-navigation/native";
 import { useFocusEffect } from "expo-router/build/useFocusEffect";
 import { generateRandomName } from "../scripts/generateRandomName";
+import { useAppDispatch } from "@/store/hooks";
+import { createPost } from "@/store/slices/posts/thunk";
+import { useSelector } from "react-redux";
+import { selectCreatePost } from "@/store/slices/posts/selector";
 
 const DEFAULT_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/profilePictures%2Fdefault_post_image.jpg?alt=media&token=82055e58-321e-4caf-9e44-4ee4c1bbf99a";
 
 const useAddPost = (navigation: NavigationProp<any>) => {
+  const { user } = useUser();
+  
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState<string | null>(null);
-  const { user } = useUser();
+
+  const dispatch = useAppDispatch();
 
   const [errors, setErrors] = useState({
     title: "",
@@ -25,9 +31,7 @@ const useAddPost = (navigation: NavigationProp<any>) => {
     price: "",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const {isLoading, isError, error} = useSelector(selectCreatePost)
 
   useFocusEffect(
     useCallback(() => {
@@ -38,9 +42,6 @@ const useAddPost = (navigation: NavigationProp<any>) => {
         setPrice("");
         setImage(null);
         setErrors({ title: "", description: "", link: "", price: "" });
-        setIsLoading(false);
-        setIsError(false);
-        setError(null);
       };
     }, [])
   );
@@ -58,8 +59,7 @@ const useAddPost = (navigation: NavigationProp<any>) => {
         setImage(result.assets[0].uri);
       }
     } catch (e) {
-      setIsError(true);
-      setError("Failed to pick image");
+      console.log('"Failed to pick image"')
     }
   };
 
@@ -97,10 +97,6 @@ const useAddPost = (navigation: NavigationProp<any>) => {
 
   const handleSubmit = async () => {
     if (validate()) {
-      setIsLoading(true);
-      setIsError(false);
-      setError(null);
-
       try {
         let downloadURL = DEFAULT_IMAGE_URL; 
 
@@ -115,28 +111,22 @@ const useAddPost = (navigation: NavigationProp<any>) => {
           downloadURL = await getDownloadURL(storageRef);
         }
 
-        const newPost = {
+        dispatch(createPost({
           title,
           description,
           link,
           price: parseFloat(price),
           imageURL: downloadURL,
-          createdAt: new Date(),
-          lastUpdate: new Date(),
-          userEmail: user?.email,
-        };
-
-        await addDoc(collection(db, "Posts"), newPost);
+          userEmail: user?.email || '',
+          lastUpdate: new Date()
+        }))
+          
         navigation.goBack();
       } catch (e) {
-        setIsError(true);
-        setError("Failed to upload post. Please try again later.");
-      } finally {
-        setIsLoading(false);
-      }
+        console.log("Failed to upload post. Please try again later.")
+      }        
     } else {
-      setIsError(true);
-      setError("Validation Error: Please correct the errors in the form.");
+      console.log("Validation Error: Please correct the errors in the form.")
     }
   };
 
@@ -154,7 +144,6 @@ const useAddPost = (navigation: NavigationProp<any>) => {
     setDescription,
     setLink,
     setPrice,
-    setIsError,
     handlePickImage,
     handleDeleteImage,  
     handleSubmit,

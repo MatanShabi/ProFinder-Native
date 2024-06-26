@@ -1,16 +1,25 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Post } from '../../../types/post'
-import { getAllPosts } from "./thunk";
+import { Post } from '../../../types/post';
+import { getAllPosts, createPost } from "./thunk";
+
+export enum Status {
+  Idle = 'idle',
+  Loading = 'loading',
+  Succeeded = 'succeeded',
+  Failed = 'failed',
+}
 
 export interface PostsState {
   posts: Post[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  getPostsStatus: Status;
+  createPostStatus: Status;
   error: string | null;
 }
 
 const initialState: PostsState = {
   posts: [],
-  status: 'idle',
+  getPostsStatus: Status.Idle,
+  createPostStatus: Status.Idle,
   error: null,
 };
 
@@ -25,18 +34,30 @@ const postsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getAllPosts.pending, (state) => {
-        state.status = 'loading';
+        state.getPostsStatus = Status.Loading;
       })
       .addCase(getAllPosts.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.getPostsStatus = Status.Succeeded;
         state.posts = action.payload;
       })
       .addCase(getAllPosts.rejected, (state, action) => {
-        state.status = 'failed';
+        state.getPostsStatus = Status.Failed;
+        state.error = action.error.message || null;
+      })
+      .addCase(createPost.pending, (state) => {
+        state.createPostStatus = Status.Loading;
+      })
+      .addCase(createPost.fulfilled, (state, action) => {
+        state.createPostStatus = Status.Succeeded;
+        state.posts.push(action.payload);
+      })
+      .addCase(createPost.rejected, (state, action) => {
+        state.createPostStatus = Status.Failed;
         state.error = action.error.message || null;
       });
   },
-})
+});
+
 export const { removePost } = postsSlice.actions;
 
-export default postsSlice.reducer
+export default postsSlice.reducer;

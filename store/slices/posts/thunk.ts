@@ -1,7 +1,7 @@
 import { Post } from '@/types/post';
 import { db } from '@/config/firebase';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 
 
 export const getAllPosts = createAsyncThunk<Post[]>('posts/getAllPosts', async () => {
@@ -16,3 +16,16 @@ export const getAllPosts = createAsyncThunk<Post[]>('posts/getAllPosts', async (
     );
     return fetchedPosts
 });
+
+export const createPost = createAsyncThunk<Post, Post>('posts/createPost', async (newPost) => {
+    const docRef = await addDoc(collection(db, 'Posts'), {
+      ...newPost,
+      createdAt: new Date(),
+      lastUpdate: new Date(),
+    });
+    
+    return {
+      ...newPost,
+      id: docRef.id,
+    };
+  });
