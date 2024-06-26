@@ -45,6 +45,9 @@ const PostsScreen = () => {
           renderItem={({ item }) => <PostCard post={item} />}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.list}
+          getItemLayout={(data, index) => (
+            { length: posts.length, offset: 3 * index, index }
+          )}
         />
       )}
     </ThemedView>

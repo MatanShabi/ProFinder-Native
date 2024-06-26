@@ -131,6 +131,9 @@ const ProfileScreen: FC = () => {
           renderItem={({ item }) => <PostCard post={item} />}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
+          getItemLayout={(data, index) => (
+            { length: posts.length, offset: 3 * index, index }
+          )}
         />
       )}
 
