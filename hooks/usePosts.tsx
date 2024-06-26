@@ -15,7 +15,7 @@ const usePosts = (isUserProfile: boolean = false) => {
   
 
   useEffect(() => {
-    dispatch(getAllPosts);
+    dispatch(getAllPosts());
   }, [isUserProfile]);
 
   const handleEditPost = (post: Post) => {
@@ -25,7 +25,6 @@ const usePosts = (isUserProfile: boolean = false) => {
   const handleDeletePost = (postId: string) => {
     dispatch(deletePost(postId));
   };
-
   const filteredPosts = posts.filter(
     (post) =>
       (post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

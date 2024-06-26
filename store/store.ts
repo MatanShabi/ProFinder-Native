@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./slices/posts";
+import postReducer from "./slices/posts";
 import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -8,7 +8,7 @@ const persistConfig = {
   storage: AsyncStorage,
 };
 
-const persistedReducer = persistReducer(persistConfig, userReducer);
+const persistedReducer = persistReducer(persistConfig, postReducer);
 
 const store = configureStore({
   reducer: persistedReducer,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { storage } from "@/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
@@ -10,6 +10,7 @@ import { createPost, updatePost } from "@/store/slices/posts/thunk";
 import { useSelector } from "react-redux";
 import { selectCreatePost } from "@/store/slices/posts/selector";
 import { Post } from "@/types/post";
+import { useFocusEffect } from "expo-router/build/useFocusEffect";
 
 const DEFAULT_IMAGE_URL =
   "https://firebasestorage.googleapis.com/v0/b/wise-buyer-android-1ab6e.appspot.com/o/profilePictures%2Fdefault_post_image.jpg?alt=media&token=82055e58-321e-4caf-9e44-4ee4c1bbf99a";
@@ -33,24 +34,47 @@ const useAddPost = (navigation: NavigationProp<any>, editPost: Post | undefined)
   });
 
   const { isLoading, isError, error } = useSelector(selectCreatePost);
-
+  
   useEffect(() => {
-    if (editPost?.id) {
-      const { title, description, link, price, imageURL } = editPost;
-      setTitle(title)
-      setDescription(description)
-      setLink(link)
-      setPrice(price.toString())
-      setImage(imageURL||'')
-    }
-    else {  
-      setTitle('')
-      setDescription('')
-      setLink('')
-      setPrice('')
-      setImage('')
-    }
-  }, [])
+    const unsubscribe = navigation.addListener("focus", () => {
+      if (editPost?.id) {
+        const { title, description, link, price, imageURL } = editPost;
+        setTitle(title)
+        setDescription(description)
+        setLink(link)
+        setPrice(price.toString())
+        setImage(imageURL||'')
+      }
+      else {  
+        setTitle('')
+        setDescription('')
+        setLink('')
+        setPrice('')
+        setImage('')
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, editPost]);
+
+  // useEffect(() => {
+  //   console.log(editPost)
+  //   if (editPost?.id) {
+  //     const { title, description, link, price, imageURL } = editPost;
+  //     setTitle(title)
+  //     setDescription(description)
+  //     setLink(link)
+  //     setPrice(price.toString())
+  //     setImage(imageURL||'')
+  //   }
+  //   else {  
+  //     setTitle('')
+  //     setDescription('')
+  //     setLink('')
+  //     setPrice('')
+  //     setImage('')
+  //   }
+  // }, [])
   
   const handlePickImage = async () => {
     try {
@@ -144,6 +168,11 @@ const useAddPost = (navigation: NavigationProp<any>, editPost: Post | undefined)
           }}))
         }
         
+        setTitle('')
+        setDescription('')
+        setLink('')
+        setPrice('')
+        setImage('')
 
         navigation.goBack();
       } catch (e) {
