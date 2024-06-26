@@ -10,6 +10,7 @@ import { ThemedView } from "@/components/ThemedView";
 import usePosts from "@/hooks/usePosts";
 import ErrorNotification from "@/components/ErrorNotification";
 import PostCard from "@/components/PostCard";
+import useUser from "@/hooks/useUser";
 
 const PostsScreen = () => {
   const {
@@ -18,7 +19,11 @@ const PostsScreen = () => {
     isError,
     searchQuery,
     setSearchQuery,
+    handleDeletePost,
+    handleEditPost
   } = usePosts();
+
+  const { user } = useUser();
 
   return (
     <ThemedView>
@@ -42,8 +47,8 @@ const PostsScreen = () => {
       ) : (
         <FlatList
           data={posts}
-          renderItem={({ item }) => <PostCard post={item} />}
-          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <PostCard post={item} isAdmin={item.userEmail == user?.email} handleDeletePost={handleDeletePost} handleEditPost={handleDeletePost} />}
+          keyExtractor={(item) => item?.id?.toString()!}
           contentContainerStyle={styles.list}
           getItemLayout={(data, index) => (
             { length: posts.length, offset: 3 * index, index }

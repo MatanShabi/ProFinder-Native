@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectAllPosts } from "@/store/slices/posts/selector";
-import { getAllPosts } from "@/store/slices/posts/thunk";
+import { deletePost, getAllPosts } from "@/store/slices/posts/thunk";
 import useUser from "./useUser";
 
 const usePosts = (isUserProfile: boolean = false) => {
@@ -14,6 +14,14 @@ const usePosts = (isUserProfile: boolean = false) => {
   useEffect(() => {
     dispatch(getAllPosts);
   }, [isUserProfile]);
+
+  const handleEditPost = (postId: string) => {
+    console.log('delete post', postId);    
+  }
+
+  const handleDeletePost = (postId: string) => {
+    dispatch(deletePost(postId));
+  }
 
 
   const filteredPosts = posts.filter(
@@ -28,7 +36,9 @@ const usePosts = (isUserProfile: boolean = false) => {
     isLoading,
     isError,
     searchQuery,
-    setSearchQuery
+    setSearchQuery,
+    handleDeletePost,
+    handleEditPost
   };
 };
 

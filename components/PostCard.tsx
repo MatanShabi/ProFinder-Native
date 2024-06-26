@@ -1,13 +1,17 @@
+import useUser from "@/hooks/useUser";
 import { Post } from "@/types/post";
 import React from "react";
-import { StyleSheet, TouchableOpacity, Linking } from "react-native";
-import { Card, Title, Paragraph, Subheading, Text } from "react-native-paper";
+import { StyleSheet, TouchableOpacity, Linking, View } from "react-native";
+import { Card, Title, Paragraph, Subheading, Text, IconButton } from "react-native-paper";
 
 interface PostCardProps {
   post: Post;
+  isAdmin: boolean;
+  handleEditPost: (postId: string) => void;
+  handleDeletePost: (postId: string) => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => (
+const PostCard: React.FC<PostCardProps> = ({ post, handleEditPost, handleDeletePost, isAdmin }) => (
   <Card style={styles.card}>
     {post.imageURL && (
       <Card.Cover source={{ uri: post.imageURL }} style={styles.cardImage} />
@@ -21,6 +25,19 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => (
           {post.link}
         </Text>
       </TouchableOpacity>
+      {isAdmin && <View style={styles.adminContent}>
+        <IconButton
+          icon="delete"
+          iconColor="red"
+          onPress={() => handleDeletePost(post.id || '')}
+        />
+        <IconButton
+          icon="pencil"
+          iconColor="blue"
+          onPress={() => handleEditPost(post.id || '')}
+        />
+      </View>
+      }
     </Card.Content>
   </Card>
 );
@@ -61,6 +78,11 @@ const styles = StyleSheet.create({
     color: "#1e90ff",
     textDecorationLine: "underline",
   },
+  adminContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  }
 });
 
 export default PostCard;

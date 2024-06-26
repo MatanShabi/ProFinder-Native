@@ -15,7 +15,8 @@ import usePosts from "@/hooks/usePosts";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import PostCard from "@/components/PostCard"; 
+import PostCard from "@/components/PostCard";
+import useUser from "@/hooks/useUser";
 
 const ProfileScreen: FC = () => {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -42,7 +43,11 @@ const ProfileScreen: FC = () => {
     posts,
     isLoading: isPostsLoading,
     isError: isPostsError,
+    handleDeletePost,
+    handleEditPost
   } = usePosts(true);
+
+  const { user } = useUser();
 
   return (
     <ThemedView>
@@ -128,8 +133,8 @@ const ProfileScreen: FC = () => {
       ) : (
         <FlatList
           data={posts}
-          renderItem={({ item }) => <PostCard post={item} />}
-          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <PostCard post={item} handleDeletePost={handleDeletePost} handleEditPost={handleEditPost} isAdmin={item.userEmail == user?.email} />}
+          keyExtractor={(item) => item.id || ''}
           contentContainerStyle={styles.list}
           getItemLayout={(data, index) => (
             { length: posts.length, offset: 3 * index, index }
