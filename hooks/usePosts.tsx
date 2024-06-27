@@ -18,8 +18,8 @@ const usePosts = (isUserProfile: boolean = false) => {
     dispatch(getAllPosts());
   }, [isUserProfile]);
 
-  const handleEditPost = (post: Post) => {
-    navigation.navigate("AddPost", post);
+  const handleEditPost = (postId: string) => {
+    navigation.navigate("AddPost", {postId});
   };
 
   const handleDeletePost = (postId: string) => {

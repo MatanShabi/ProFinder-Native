@@ -9,16 +9,23 @@ import {
   Modal,
 } from "react-native";
 import { Button, IconButton, Text } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import useAddPost from "../../hooks/useAddPost";
-import { useLocalSearchParams } from "expo-router";
-import { Post } from "@/types/post";
+import { useAppSelector } from "@/store/hooks";
+import { useRoute } from '@react-navigation/native';
+
+
+type AddPostScreenRouteProp = RouteProp<{
+  AddPost: { postId: string };
+}, 'AddPost'>;
 
 const AddPostScreen = () => {
   const navigation = useNavigation<any>();
-  const editPost = useLocalSearchParams() as any;
-  
+  const route = useRoute<AddPostScreenRouteProp>();
+  const { postId } = route.params;
+  const editPost = useAppSelector((state) => state.posts.find((post) => post?.id === postId?.toString()));
+
   const {
     title,
     description,

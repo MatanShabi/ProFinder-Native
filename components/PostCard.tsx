@@ -13,7 +13,7 @@ import {
 interface PostCardProps {
   post: Post;
   isAdmin: boolean;
-  handleEditPost: (post: Post) => void;
+  handleEditPost: (postId: string) => void;
   handleDeletePost: (postId: string) => void;
 }
 
@@ -46,7 +46,7 @@ const PostCard: React.FC<PostCardProps> = ({
           <IconButton
             icon="pencil"
             iconColor="blue"
-            onPress={() => handleEditPost(post)}
+            onPress={() => handleEditPost(post.id || "")}
           />
         </View>
       )}
