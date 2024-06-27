@@ -74,7 +74,12 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ navigation }) => {
             icon="send"
             mode="contained"
             onPress={methods.handleSubmit(async (data: SignUpForm) =>
-              createUser(data.email, data.password, data.firstName, data.lastName)
+              createUser(
+                data.email,
+                data.password,
+                data.firstName,
+                data.lastName,
+              ),
             )}
           >
             Sign Up
@@ -97,17 +102,17 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 15,
     margin: 20,
-    marginTop: 40
+    marginTop: 40,
   },
   containerHeader: {
     fontWeight: "700",
-    marginBottom: 10
+    marginBottom: 10,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
 });
 
 export default SignUpScreen;

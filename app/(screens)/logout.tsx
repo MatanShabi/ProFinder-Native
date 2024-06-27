@@ -10,9 +10,11 @@ const LogoutScreen = () => {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   if (isLoading) {
-    return (<ThemedView>
-      <ActivityIndicator animating={true} size="large" />
-    </ThemedView>);
+    return (
+      <ThemedView>
+        <ActivityIndicator animating={true} size="large" />
+      </ThemedView>
+    );
   }
 
   if (isError && error) {
@@ -22,8 +24,13 @@ const LogoutScreen = () => {
 
   return (
     <ThemedView>
-      <ErrorNotification visible={snackbarVisible} errorMessage={errorMessage}
-        onDismiss={() => { setSnackbarVisible(false); }} />
+      <ErrorNotification
+        visible={snackbarVisible}
+        errorMessage={errorMessage}
+        onDismiss={() => {
+          setSnackbarVisible(false);
+        }}
+      />
     </ThemedView>
   );
 };

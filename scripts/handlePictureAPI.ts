@@ -2,11 +2,14 @@ import axios from "axios";
 
 function generateRandomColor(): string {
   const random = Math.floor(Math.random() * 16777215).toString(16);
-  return '#' + '0'.repeat(6 - random.length) + random;
+  return "#" + "0".repeat(6 - random.length) + random;
 }
 
-export const handlePictureAPI = async (firstName: string, lastName: string): Promise<Blob> => {
-  let apiUrl = 'https://ui-avatars.com/api/';
+export const handlePictureAPI = async (
+  firstName: string,
+  lastName: string,
+): Promise<Blob> => {
+  let apiUrl = "https://ui-avatars.com/api/";
   const nameParam = `?name=${encodeURIComponent(firstName + " " + lastName)}`;
   const sizeParam = `&size=200`;
   const colorParam = `&color=fff`;
@@ -19,6 +22,6 @@ export const handlePictureAPI = async (firstName: string, lastName: string): Pro
 
   apiUrl += backgroundParam;
 
-  const response = await axios.get(apiUrl, { responseType: 'blob' });
+  const response = await axios.get(apiUrl, { responseType: "blob" });
   return response.data;
 };

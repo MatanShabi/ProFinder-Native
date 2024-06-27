@@ -16,7 +16,7 @@ const useLogin = () => {
       setIsLoading(false);
       setIsError(false);
     } catch (e) {
-      console.error('Error to login', e)
+      console.error("Error to login", e);
       setIsError(true);
     } finally {
       setIsLoading(false);
