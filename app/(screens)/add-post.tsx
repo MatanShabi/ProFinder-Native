@@ -24,8 +24,7 @@ type AddPostScreenRouteProp = RouteProp<{
 const AddPostScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<AddPostScreenRouteProp>();
-  const { postId } = route.params;
-  const editPost = useAppSelector(selectPostById(postId));
+  const editPost = useAppSelector(selectPostById(route?.params?.postId));
 
   const {
     title,
