@@ -14,6 +14,7 @@ import ErrorNotification from "@/components/ErrorNotification";
 import useAddPost from "../../hooks/useAddPost";
 import { useAppSelector } from "@/store/hooks";
 import { useRoute } from '@react-navigation/native';
+import { selectPostById } from "@/store/slices/posts/selector";
 
 
 type AddPostScreenRouteProp = RouteProp<{
@@ -24,7 +25,7 @@ const AddPostScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<AddPostScreenRouteProp>();
   const { postId } = route.params;
-  const editPost = useAppSelector((state) => state.posts.find((post) => post?.id === postId?.toString()));
+  const editPost = useAppSelector(selectPostById(postId));
 
   const {
     title,

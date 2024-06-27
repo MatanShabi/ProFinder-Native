@@ -2,6 +2,7 @@ import { RootState } from "@/store/store";
 import { createSelector } from "@reduxjs/toolkit";
 import { Status } from ".";
 
+// Existing selectors
 export const selectAllPosts = createSelector(
   (state: RootState) => state.posts,
   (state: RootState) => state.getPostsStatus,
@@ -11,7 +12,7 @@ export const selectAllPosts = createSelector(
     isLoading: status === Status.Loading,
     isError: error !== null,
     error,
-  }),
+  })
 );
 
 export const selectCreatePost = createSelector(
@@ -21,5 +22,11 @@ export const selectCreatePost = createSelector(
     isLoading: createPostStatus === Status.Loading,
     isError: createPostStatus === Status.Failed && error !== null,
     error,
-  }),
+  })
 );
+
+export const selectPostById = (postId: string) =>
+  createSelector(
+    (state: RootState) => state.posts,
+    (posts) => posts.find((post) => post.id === postId)
+  );
