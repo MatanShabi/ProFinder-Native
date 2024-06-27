@@ -56,25 +56,6 @@ const useAddPost = (navigation: NavigationProp<any>, editPost: Post | undefined)
 
     return unsubscribe;
   }, [navigation, editPost]);
-
-  // useEffect(() => {
-  //   console.log(editPost)
-  //   if (editPost?.id) {
-  //     const { title, description, link, price, imageURL } = editPost;
-  //     setTitle(title)
-  //     setDescription(description)
-  //     setLink(link)
-  //     setPrice(price.toString())
-  //     setImage(imageURL||'')
-  //   }
-  //   else {  
-  //     setTitle('')
-  //     setDescription('')
-  //     setLink('')
-  //     setPrice('')
-  //     setImage('')
-  //   }
-  // }, [])
   
   const handlePickImage = async () => {
     try {
@@ -128,9 +109,10 @@ const useAddPost = (navigation: NavigationProp<any>, editPost: Post | undefined)
   const handleSubmit = async () => {
     if (validate()) {
       try {
-        let downloadURL = DEFAULT_IMAGE_URL;
+        const isExistingImage = image?.includes('firebasestorage')
+        let downloadURL = isExistingImage? image : DEFAULT_IMAGE_URL;
 
-        if (image !== null) {
+        if (image !== null && !isExistingImage) {
           const imageFileName =
             generateRandomName() + "." + image.split(".").pop();
           const response = await fetch(image);
