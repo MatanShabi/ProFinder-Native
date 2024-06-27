@@ -131,7 +131,7 @@ const useAddPost = (navigation: NavigationProp<any>, editPost: Post | undefined)
               description,
               link,
               price: parseFloat(price),
-              imageURL: downloadURL,
+              imageURL: downloadURL || '',
               userEmail: user?.email || "",
               lastUpdate: new Date(),
             }),
@@ -144,7 +144,7 @@ const useAddPost = (navigation: NavigationProp<any>, editPost: Post | undefined)
               description,
               link,
               price: parseFloat(price),
-              imageURL: downloadURL,
+              imageURL: downloadURL || '',
               userEmail: user?.email || "",
               lastUpdate: new Date(),
           }}))
