@@ -1,5 +1,5 @@
 import { Post } from "@/types/post";
-import React from "react";
+import React, { memo } from "react";
 import { StyleSheet, TouchableOpacity, Linking, View } from "react-native";
 import {
   Card,
@@ -9,6 +9,8 @@ import {
   Text,
   IconButton,
 } from "react-native-paper";
+
+export const CARD_HIGHT = 180;
 
 interface PostCardProps {
   post: Post;
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
   },
   cardImage: {
-    height: 180,
+    height: CARD_HIGHT,
     width: "100%",
   },
   cardContent: {
@@ -97,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostCard;
+export default memo(PostCard);

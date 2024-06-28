@@ -5,11 +5,12 @@ import {
   FlatList,
   ActivityIndicator,
   TextInput,
+  RefreshControl,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import usePosts from "@/hooks/usePosts";
 import ErrorNotification from "@/components/ErrorNotification";
-import PostCard from "@/components/PostCard";
+import PostCard, { CARD_HIGHT } from "@/components/PostCard";
 import useUser from "@/hooks/useUser";
 
 const PostsScreen = () => {
@@ -21,6 +22,7 @@ const PostsScreen = () => {
     setSearchQuery,
     handleDeletePost,
     handleEditPost,
+    handleRefreshPosts
   } = usePosts();
 
   const { user } = useUser();
@@ -55,11 +57,14 @@ const PostsScreen = () => {
               handleEditPost={handleEditPost}
             />
           )}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={handleRefreshPosts}/>
+          }
           keyExtractor={(item) => item?.id?.toString()!}
           contentContainerStyle={styles.list}
           getItemLayout={(data, index) => ({
-            length: posts.length,
-            offset: 3 * index,
+            length: CARD_HIGHT,
+            offset: CARD_HIGHT * index,
             index,
           })}
         />
