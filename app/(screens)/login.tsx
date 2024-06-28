@@ -35,8 +35,8 @@ const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
           <FormInput
             label="Email"
             formKey="email"
-            placeholder="Enter your username"
-            rules={{ required: "Username is required" }}
+            placeholder="Enter your email"
+            rules={{ required: "email is required" }}
           />
           <FormInput
             label="Password"
