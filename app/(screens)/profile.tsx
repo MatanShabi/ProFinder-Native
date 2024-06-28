@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { Avatar, Text, IconButton, Button, FAB } from "react-native-paper";
 import { ThemedView } from "@/components/ThemedView";
@@ -15,7 +16,7 @@ import usePosts from "@/hooks/usePosts";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import ErrorNotification from "@/components/ErrorNotification";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import PostCard from "@/components/PostCard";
+import PostCard, { CARD_HIGHT } from "@/components/PostCard";
 import useUser from "@/hooks/useUser";
 
 const ProfileScreen: FC = () => {
@@ -45,6 +46,7 @@ const ProfileScreen: FC = () => {
     isError: isPostsError,
     handleDeletePost,
     handleEditPost,
+    handleRefreshPosts
   } = usePosts(true);
 
   const { user } = useUser();
@@ -142,11 +144,14 @@ const ProfileScreen: FC = () => {
               isAdmin={item.userEmail == user?.email}
             />
           )}
-          keyExtractor={(item) => item.id || ""}
+          keyExtractor={(item) => item.id?.toString()|| new Date().getTime().toString()}
           contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl refreshing={isPostsLoading} onRefresh={handleRefreshPosts}/>
+          }
           getItemLayout={(data, index) => ({
-            length: posts.length,
-            offset: 3 * index,
+            length: CARD_HIGHT,
+            offset: CARD_HIGHT * index,
             index,
           })}
         />

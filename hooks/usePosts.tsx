@@ -25,6 +25,11 @@ const usePosts = (isUserProfile: boolean = false) => {
   const handleDeletePost = (postId: string) => {
     dispatch(deletePost(postId));
   };
+
+  const handleRefreshPosts = () => {
+    dispatch(getAllPosts());
+  }
+
   const filteredPosts = posts.filter(
     (post) =>
       (post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -41,6 +46,7 @@ const usePosts = (isUserProfile: boolean = false) => {
     setSearchQuery,
     handleDeletePost,
     handleEditPost,
+    handleRefreshPosts
   };
 };
 
